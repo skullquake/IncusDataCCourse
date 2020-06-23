@@ -8,6 +8,9 @@
 #include<stdio.h>
 extern struct mg_serve_http_opts s_http_server_opts;
 static void dukexec(char*path,struct mg_connection*nc,int ev,void *ev_data);
+/*! Event handler for js execution. Exepcts url argument scr with value of path
+ *  to script to execute
+ */
 void hdl_duk(struct mg_connection*c,int ev,void *p){
 	DBGVAR(hdl_duk,p);
 	if(ev==MG_EV_HTTP_REQUEST){
@@ -29,12 +32,14 @@ void hdl_duk(struct mg_connection*c,int ev,void *p){
 		}
 	}
 }
-static duk_ret_t native_mg_printf(duk_context*ctx){
+/*! native function to register on js context */
+static duk_ret_t native_mg_printf(duk_context*ctx){//todo: varargs
 	struct mg_connection*nc=(struct mg_connection*)duk_to_pointer(ctx,0);
 	char*val=duk_to_string(ctx,1);
 	mg_printf(nc,val);
 	return 0;
 }
+/*! open file, get contents, create js context, register and execute */
 static void dukexec(char*path,struct mg_connection*nc,int ev,void *ev_data){
 	char*buffer=0;
 	long length;
@@ -53,21 +58,18 @@ static void dukexec(char*path,struct mg_connection*nc,int ev,void *ev_data){
 	if(buffer){
 		duk_context *ctx=duk_create_heap_default();
 		duk_register(ctx);
-
-
+		//register request parameters (pointers)
 		duk_push_pointer(ctx,nc);
 		duk_put_global_string(ctx,"nc");
 		duk_push_int(ctx,ev);
 		duk_put_global_string(ctx,"ev");
 		duk_push_pointer(ctx,ev_data);
 		duk_put_global_string(ctx,"ev_data");
-
+		//register mongoose functions - todo: refactor
 		duk_push_c_function(ctx,native_mg_printf,2);
-		duk_put_global_string(ctx,"mg_printf");//how to make varargs???
-
+		duk_put_global_string(ctx,"mg_printf");//todo: varargs
 		duk_eval_string_noresult(ctx,buffer);
 		duk_destroy_heap(ctx);
-
 		free(buffer);
 	}else{
 		fprintf(stderr,"Error:duk_exec:Failed to open file\n");
