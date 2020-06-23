@@ -1,0 +1,44 @@
+/*!@file a.c
+ * @brief 
+ * vim: set et ts=3 sw=3 sts=3 fenc=utf-8 :
+ * https://ppanyukov.github.io/2011/06/29/retabbing-in-vim.html
+ */
+#include<stdbool.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
+#include"b.h"
+#include"ea/ga.h"
+#include"db/dbtest.h"
+#include"incus/cadv/prg000.h"
+#include"duktape/exec.h"
+#define OPTPARSE_IMPLEMENTATION
+#define OPTPARSE_API static
+#include"optparse/optparse.h"
+int main(int argc,char**argv){
+				struct optparse_long longopts[] = {
+								{"run", 'r', OPTPARSE_NONE},
+								{"version", 'v', OPTPARSE_REQUIRED},
+								{0}
+				};
+				char *arg;
+				int option;
+				struct optparse options;
+				optparse_init(&options, argv);
+				while ((option = optparse_long(&options, longopts, NULL)) != -1) {
+								switch (option) {
+												case 'v':
+																printf("Version 0.01\n");
+																break;
+												case 'r':
+																printf("options.optarg:",options.optarg);
+																duk_exec(options.optarg);
+																break;
+												case '?':
+																fprintf(stderr, "%s: %s\n", argv[0], options.errmsg);
+																exit(EXIT_FAILURE);
+								}
+				}
+				return EXIT_SUCCESS;
+}
