@@ -1,2 +1,2 @@
 #!/bin/bash
-./bin/a.out --serve
+./bin/a.out --serve --port 1234 --init ./scr/srv/init.js

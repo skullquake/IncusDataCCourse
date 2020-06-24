@@ -1,0 +1,1 @@
+INSERT INTO SRVLOG(LOGNODE,MESSAGE,TIMESTAMP)VALUES("Info","Starting server",datetime());

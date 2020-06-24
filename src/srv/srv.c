@@ -14,13 +14,14 @@ struct mg_serve_http_opts s_http_server_opts;
 /*! starts server (todo: parameterize)
     \return nothing
 */
-void srv_start(void){
+void srv_start(char*port){
 	DBGVAR(srv_start,p);
+	port=port==NULL?s_http_port:port;
 	struct mg_mgr mgr;
 	struct mg_connection*c;
 	mg_mgr_init(&mgr,NULL);
-	printf("Starting web server on port %s\n",s_http_port);
-	c=mg_bind(&mgr,s_http_port,ev_handler);
+	printf("Starting web server on port %s\n",port);
+	c=mg_bind(&mgr,port,ev_handler);
 	mg_register_http_endpoint(c,"/duk",hdl_duk);
 	mg_set_protocol_http_websocket(c);
 	s_http_server_opts.document_root=".";
