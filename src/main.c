@@ -10,12 +10,13 @@
 #include"b.h"
 #include"ea/ga.h"
 #include"db/dbtest.h"
-#include"incus/cadv/prg000.h"
 #include"duktape/exec.h"
 #include"macros/logging.h"
 #include"cli/cli.h"
+#include"incus/cadv/example04.h"
 int main(int argc,char**argv){
 	DBGVAR(main,p);
 	cli_parse(argc,argv);
+	//example04();
 	return EXIT_SUCCESS;
 }

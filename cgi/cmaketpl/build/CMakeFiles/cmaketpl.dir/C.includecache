@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/runner/NegativeLightcoralLocatorprogram/cgi/cmaketpl/src/main.c
+main.h
+/home/runner/NegativeLightcoralLocatorprogram/cgi/cmaketpl/src/main.h
+
+/home/runner/NegativeLightcoralLocatorprogram/cgi/cmaketpl/src/main.h
+stdbool.h
+-
+stdlib.h
+-
+string.h
+-
+ctype.h
+-
+stdio.h
+-
+platform.h
+/home/runner/NegativeLightcoralLocatorprogram/cgi/cmaketpl/src/platform.h
+
+platform.h
+
