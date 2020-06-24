@@ -4,16 +4,17 @@
  * @brief main function
  * @version 0.1
  */
-/*! loads */
-load('./scr/lib.js');
-load('./scr/db.js');
-load('./scr/fsutils.js');
+/*! loads
+load('./scr/lib/lib.js');
+load('./scr/lib/db.js');
+load('./scr/lib/fsutils.js');
+ */
 /*! Main driver - called at end of this script
  *  \return 0 on success, !0 on error
  */
 function main(){
 	log('Info: main(): start');
-	rawtest();
+	//rawtest();
 	log('Info: main(): end');
 	return 0;
 }

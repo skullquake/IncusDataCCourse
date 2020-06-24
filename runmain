@@ -1,2 +1,0 @@
-#!/bin/bash
-make -s run ./scr/main.js

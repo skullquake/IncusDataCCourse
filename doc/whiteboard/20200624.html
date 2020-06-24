@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Codi Matters">
+  <meta name="dcterms.date" content="2020-06-22">
+  <meta name="keywords" content="linux, notes, course">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <title>Whiteboard</title>
+  <style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+  <link rel="stylesheet" href="../../res/incus-pandoc-fonts.css">
+  <link rel="stylesheet" href="../../res/incus-pandoc.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+   var mathElements = document.getElementsByClassName("math");
+   for (var i = 0; i < mathElements.length; i++) {
+    var texText = mathElements[i].firstChild;
+    if (mathElements[i].tagName == "SPAN") {
+     katex.render(texText.data, mathElements[i], {
+      displayMode: mathElements[i].classList.contains('display'),
+      throwOnError: false,
+      fleqn: false
+     });
+  }}});
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div id="totop-div">
+    <hr>
+    <a href="#" class="totop-div"></a>
+</div>
+<header>
+<div class="pglogo"><a href="../../index.html" title="Incus Data Complementary Material"><img
+alt="Incus Data" height="34" width="124" src="../../res/img/incuslogocm.png">
+</a>
+<a href="https://za.linkedin.com/company/incus-data-pty-ltd"><span class="icon-linkedin-rect"></span></a>
+<a href="https://www.facebook.com/incusdata/"><span class="icon-facebook-rect"></span></a>
+</div>
+<div class="pghdright">
+<div class="pgauthor">Codi Matters</div>
+<div class="pglicdate">
+<div class="pgdate">2020-06-22</div>
+<div class='pglic'><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode" title="Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International"><span class="icon-creative-commons"></span> by-nc-sa</a></div>
+</div></div>
+<div class="pgcategory">C</div>
+</header>
+<main role="main">
+<div class="pgtitle">&nbsp;&nbsp;</div><div class="page">
+<h1 class="pgtitle">Whiteboard</h1>
+<div style="display:flex;align-items:center;justify-content:center;width:100%;margin:auto;margin-top:-4rem;margin-bottom:-2.4em;border-bottom:2px solid gray;text-align:center;">
+<p><a href="course.html"><strong>Welcome</strong></a> <code>‖</code> <a href="c-ac-20200622-notes.html"><strong>C Course Notes</strong></a> <code>‖</code> <a href="c-ac-20200622-code.html"><strong>Course Code Examples</strong></a></p>
+</div>
+<h1 id="dies-tertium">Dies Tertium</h1>
+<p><a href="./c-ac-20200622-code.html#function-pointer-experiments"><strong>Function Pointer Experiments</strong></a>. Files can also be downloaded: <a href="./src/fpdemo.zip"><strong><code>fpdemo.zip</code></strong></a>, and has been placed on: <a href="https://repl.it/@CodiMatters/fpdemo#main.c"><strong>repl.it@CodiMatters/fpdemo</strong></a></p>
+<p>Given: <strong><code>T F (P);</code></strong> <span class="math inline">\longleftarrow</span> function <code>F</code> taking <code>P</code> parameters, returning <code>T</code>.<br />
+Then : <strong><code>F</code></strong> <span class="xar">t</span> <strong><code>T(*)(P)</code></strong> <span class="xar">r</span> “pointer-to-function taking <code>P</code> parameters, returning <code>T</code>)”.</p>
+<details>
+<p><summary><strong><code>yafpdemo.c</code></strong> — <strong><em>Yet Another Function Pointer Demo</em></strong></summary></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="dt">int</span> f (<span class="dt">double</span> param) { printf(<span class="st">&quot;f(%f)</span><span class="sc">\n</span><span class="st">&quot;</span>, param); <span class="cf">return</span> <span class="dv">123</span>; }</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="dt">int</span> g (<span class="dt">double</span> param) { printf(<span class="st">&quot;g(%f)</span><span class="sc">\n</span><span class="st">&quot;</span>, param); <span class="cf">return</span> <span class="dv">234</span>; }</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="dt">int</span> h (<span class="dt">double</span> param) { printf(<span class="st">&quot;h(%f)</span><span class="sc">\n</span><span class="st">&quot;</span>, param); <span class="cf">return</span> <span class="dv">356</span>; }</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="dt">void</span> ftp (<span class="dt">int</span>(*param)(<span class="dt">double</span>)) {</span>
+<span id="cb1-10"><a href="#cb1-10"></a>   <span class="dt">int</span> r = param(<span class="fl">12.34</span>);</span>
+<span id="cb1-11"><a href="#cb1-11"></a>   printf(<span class="st">&quot;r = %d</span><span class="sc">\n</span><span class="st">&quot;</span>, r);</span>
+<span id="cb1-12"><a href="#cb1-12"></a>   }</span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="dt">int</span>(*frp(<span class="dt">void</span>))(<span class="dt">double</span>) {</span>
+<span id="cb1-15"><a href="#cb1-15"></a>   <span class="cf">return</span> f;</span>
+<span id="cb1-16"><a href="#cb1-16"></a>   }</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="dt">void</span> ftfa (<span class="dt">int</span>(*param[])(<span class="dt">double</span>), <span class="dt">int</span> count) {</span>
+<span id="cb1-19"><a href="#cb1-19"></a>   printf(<span class="st">&quot;ftfa doing it&#39;s thing...</span><span class="sc">\n</span><span class="st">&quot;</span>);</span>
+<span id="cb1-20"><a href="#cb1-20"></a>   <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; count; ++i)</span>
+<span id="cb1-21"><a href="#cb1-21"></a>      printf(<span class="st">&quot;param[%d] = %d</span><span class="sc">\n</span><span class="st">&quot;</span>, i, param[i](<span class="fl">123.456</span>));</span>
+<span id="cb1-22"><a href="#cb1-22"></a>   }</span>
+<span id="cb1-23"><a href="#cb1-23"></a></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="dt">int</span> main (<span class="dt">void</span>) {</span>
+<span id="cb1-25"><a href="#cb1-25"></a>   <span class="dt">int</span> r = f(<span class="fl">12.34</span>);</span>
+<span id="cb1-26"><a href="#cb1-26"></a>   printf(<span class="st">&quot;r = %d</span><span class="sc">\n</span><span class="st">&quot;</span>, r);</span>
+<span id="cb1-27"><a href="#cb1-27"></a>   <span class="dt">int</span> (*pf)(<span class="dt">double</span>) = f;</span>
+<span id="cb1-28"><a href="#cb1-28"></a>   r = pf(<span class="fl">12.34</span>);</span>
+<span id="cb1-29"><a href="#cb1-29"></a>   ftp(pf); ftp(f);</span>
+<span id="cb1-30"><a href="#cb1-30"></a>   pf = frp();</span>
+<span id="cb1-31"><a href="#cb1-31"></a>   r = pf(<span class="fl">23.45</span>);</span>
+<span id="cb1-32"><a href="#cb1-32"></a>   r = frp()(<span class="fl">23.45</span>);</span>
+<span id="cb1-33"><a href="#cb1-33"></a>   <span class="dt">int</span>(*aof[<span class="dv">3</span>])(<span class="dt">double</span>) = { f, g, h };</span>
+<span id="cb1-34"><a href="#cb1-34"></a>   <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">3</span>; ++i)</span>
+<span id="cb1-35"><a href="#cb1-35"></a>      r = aof[i](<span class="fl">123.456</span>);</span>
+<span id="cb1-36"><a href="#cb1-36"></a>   ftfa(aof, <span class="dv">3</span>);</span>
+<span id="cb1-37"><a href="#cb1-37"></a>   }</span></code></pre></div>
+</details>
+<details>
+<p><summary><strong><code>fptalias.c</code></strong> — <strong><em>Function Pointer Type Alias Example</em></strong></summary></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="kw">typedef</span> <span class="dt">int</span> FT (<span class="dt">double</span>);  <span class="co">//← FT ≡ int(double)</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="dt">static</span> FT f, g, h;        <span class="co">//← declare functions f, g &amp; h.</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="pp">#define CALL(f,arg) \</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="pp">   do{ \</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="pp">     int result = f(arg); \</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="pp">     printf(#f &quot;(%.2f) -&gt; &quot;, arg); \</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="pp">     printf(&quot;%d\n&quot;, result); \</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="pp">     }while(0)</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="dt">void</span> ftp (FT* param) { ... }</span>
+<span id="cb2-16"><a href="#cb2-16"></a>FT*  frp (<span class="dt">void</span>) { <span class="cf">return</span> f; }</span>
+<span id="cb2-17"><a href="#cb2-17"></a></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="dt">int</span> main (<span class="dt">void</span>) {</span>
+<span id="cb2-19"><a href="#cb2-19"></a>   CALL(f, <span class="fl">12.34</span>);   CALL(g, <span class="fl">23.45</span>);   CALL(h, <span class="fl">34.56</span>);</span>
+<span id="cb2-20"><a href="#cb2-20"></a>   FT* pf = f;</span>
+<span id="cb2-21"><a href="#cb2-21"></a>   FT* aof[<span class="dv">3</span>] = { f, g, h };</span>
+<span id="cb2-22"><a href="#cb2-22"></a>   }</span>
+<span id="cb2-23"><a href="#cb2-23"></a></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co">/* define functions f, g &amp; h.</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="co">*/</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="dt">static</span> <span class="dt">int</span> f (<span class="dt">double</span> parm) { printf(<span class="st">&quot;f(%.2f)</span><span class="sc">\n</span><span class="st">&quot;</span>, parm); <span class="cf">return</span> <span class="dv">123</span>; }</span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="dt">static</span> <span class="dt">int</span> g (<span class="dt">double</span> parm) { printf(<span class="st">&quot;f(%.2f)</span><span class="sc">\n</span><span class="st">&quot;</span>, parm); <span class="cf">return</span> <span class="dv">234</span>; }</span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="dt">static</span> <span class="dt">int</span> h (<span class="dt">double</span> parm) { printf(<span class="st">&quot;f(%.2f)</span><span class="sc">\n</span><span class="st">&quot;</span>, parm); <span class="cf">return</span> <span class="dv">345</span>; }</span></code></pre></div>
+</details>
+<details>
+<p><summary><strong><code>arrofarr.c</code></strong> — <strong><em>Partial Arrays-of-Arrays Examples</em></strong></summary></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1"></a><span class="dt">int</span> arr[<span class="dv">3</span>]       = { <span class="dv">11</span>, <span class="dv">22</span>, <span class="dv">33</span> };</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="dt">int</span>*  x          = &amp;arr[<span class="dv">0</span>];  printf(<span class="st">&quot;x = %p</span><span class="sc">\n</span><span class="st">&quot;</span>, (<span class="dt">void</span>*)x);</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="dt">int</span>*  y          =  arr;     printf(<span class="st">&quot;y = %p</span><span class="sc">\n</span><span class="st">&quot;</span>, (<span class="dt">void</span>*)y);</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="dt">int</span> (*z)[<span class="dv">3</span>]      = &amp;arr;     printf(<span class="st">&quot;z = %p</span><span class="sc">\n</span><span class="st">&quot;</span>, (<span class="dt">void</span>*)z);</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="dt">int</span> bar[<span class="dv">4</span>][<span class="dv">3</span>];</span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="dt">int</span> (*a)[<span class="dv">3</span>]      = &amp;bar[<span class="dv">0</span>];</span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="dt">int</span> (*b)[<span class="dv">3</span>]      =  bar;</span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="dt">int</span> (*c)[<span class="dv">4</span>][<span class="dv">3</span>]   = &amp;bar;</span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="dt">int</span>*  d          =  bar[<span class="dv">0</span>];</span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="dt">int</span>   e          =  bar[<span class="dv">0</span>][<span class="dv">0</span>];</span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="dt">int</span>*  f          = &amp;bar[<span class="dv">0</span>][<span class="dv">0</span>];</span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="dt">int</span> total = sum2d(bar, <span class="dv">4</span>);</span>
+<span id="cb3-14"><a href="#cb3-14"></a>    total = sum2d(b,   <span class="dv">4</span>);</span>
+<span id="cb3-15"><a href="#cb3-15"></a>    total = sum2d(a,   <span class="dv">4</span>);</span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co">// int sum2d (int (*parm)[3], int rows) {</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="dt">int</span> sum2d (<span class="dt">int</span> parm[][<span class="dv">3</span>], <span class="dt">int</span> rows) {</span>
+<span id="cb3-18"><a href="#cb3-18"></a>   <span class="dt">int</span> sum = <span class="dv">0</span>;</span>
+<span id="cb3-19"><a href="#cb3-19"></a>   <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; rows; ++i)</span>
+<span id="cb3-20"><a href="#cb3-20"></a>      <span class="cf">for</span> (<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; <span class="dv">3</span>; ++j)</span>
+<span id="cb3-21"><a href="#cb3-21"></a>         sum += parm[i][j];</span>
+<span id="cb3-22"><a href="#cb3-22"></a>   <span class="cf">return</span> sum;</span>
+<span id="cb3-23"><a href="#cb3-23"></a>   }</span></code></pre></div>
+<hr />
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1"></a><span class="dt">void</span> func (<span class="dt">int</span>* parm);       ≡  <span class="dt">void</span> func (<span class="dt">int</span> parm[]);</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="dt">void</span> func (<span class="dt">int</span> (*parm)[<span class="dv">3</span>]);  ≡  <span class="dt">void</span> func (<span class="dt">int</span> parm[][<span class="dv">3</span>]);</span></code></pre></div>
+<hr />
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">typedef</span> <span class="dt">int</span> ROW [<span class="dv">3</span>];</span>
+<span id="cb5-2"><a href="#cb5-2"></a>ROW arr          = { <span class="dv">11</span>, <span class="dv">22</span>, <span class="dv">33</span> };</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="dt">int</span>*  x          = &amp;arr[<span class="dv">0</span>];  printf(<span class="st">&quot;x = %p</span><span class="sc">\n</span><span class="st">&quot;</span>, (<span class="dt">void</span>*)x);</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="dt">int</span>*  y          =  arr;     printf(<span class="st">&quot;y = %p</span><span class="sc">\n</span><span class="st">&quot;</span>, (<span class="dt">void</span>*)y);</span>
+<span id="cb5-5"><a href="#cb5-5"></a>ROW*  z          = &amp;arr;     printf(<span class="st">&quot;z = %p</span><span class="sc">\n</span><span class="st">&quot;</span>, (<span class="dt">void</span>*)z);</span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a>ROW bar[<span class="dv">4</span>];</span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="dt">int</span> sum2d (ROW parm[], <span class="dt">int</span> rows)</span></code></pre></div>
+</details>
+<hr />
+<h4 id="method-for-decoding-c-declarations">Method for Decoding C Declarations</h4>
+<ul>
+<li>Start with the <span class="stx">ident</span>ifier being declared/defined…</li>
+<li>Keep reading to the right, unless interrupted…</li>
+<li>When finding a closing <code>`)`</code> without having read the matching <code>`(`</code>, jump to <code>`(`</code>…</li>
+<li>When finding:<br />
+<span class="tab1"></span><code>`(`</code> (unmatched) <span class="xar">r</span> ‘function’ taking … parameters<br />
+<span class="tab1"></span><code>`*`</code> <span class="xar">r</span> ‘pointer’ to …<br />
+<span class="tab1"></span><code>`[`</code> <span class="xar">r</span> ‘array’ of …<br />
+</li>
+<li>After reaching the end, read what is remaining on the left.</li>
+</ul>
+<p>Or use <a href="https://cdecl.org/"><strong>cdecl</strong></a>.</p>
+<hr />
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1"></a><span class="dt">char</span> (*(*(y)())[<span class="dv">3</span>])(<span class="dt">double</span>)</span></code></pre></div>
+<p>‘<strong><code>y</code></strong> is a function, returning pointer to an array or 3 elements, which are pointers to functions taking <code>double</code> parameter, returning a <code>char</code>’</p>
+<hr />
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1"></a><span class="dt">char</span> car[] = <span class="st">&quot;ABCDE&quot;</span>;</span>
+<span id="cb7-2"><a href="#cb7-2"></a>car[<span class="dv">0</span>] = <span class="ch">&#39;X&#39;</span>;</span>
+<span id="cb7-3"><a href="#cb7-3"></a>printf(<span class="st">&quot;%s</span><span class="sc">\n</span><span class="st">&quot;</span>, car);</span>
+<span id="cb7-4"><a href="#cb7-4"></a>printf(<span class="st">&quot;%s</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="st">&quot;ABCDEF&quot;</span>);</span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="dt">char</span>* p = <span class="st">&quot;ABCDEF&quot;</span>;</span>
+<span id="cb7-6"><a href="#cb7-6"></a>printf(<span class="st">&quot;%s</span><span class="sc">\n</span><span class="st">&quot;</span>, p);</span>
+<span id="cb7-7"><a href="#cb7-7"></a>p = car;</span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">//BAD: car = p; ≡ &amp;car[0] = p;</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="dt">char</span> c = car[<span class="dv">1</span>];</span>
+<span id="cb7-10"><a href="#cb7-10"></a>     c = p[<span class="dv">1</span>];</span>
+<span id="cb7-11"><a href="#cb7-11"></a>     c = <span class="st">&quot;ABCDEF&quot;</span>[<span class="dv">1</span>];</span>
+<span id="cb7-12"><a href="#cb7-12"></a>printf(car);</span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="dt">char</span> buf[<span class="kw">sizeof</span> car];</span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="dt">char</span>* d = buf, *s = car;</span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="cf">while</span> (*d++ = *s++)</span>
+<span id="cb7-16"><a href="#cb7-16"></a>   ;</span></code></pre></div>
+<hr />
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1"></a><span class="dt">char</span> messages[<span class="dv">5</span>][<span class="dv">65</span>] = {</span>
+<span id="cb8-2"><a href="#cb8-2"></a>   <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;DEF&quot;</span>, <span class="st">&quot;GHI&quot;</span>, <span class="st">&quot;&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3"></a>   <span class="st">&quot;JKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVXYXYZ&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>   };</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">5</span>; ++i)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>   printf(<span class="st">&quot;%s</span><span class="sc">\n</span><span class="st">&quot;</span>, message[i]);</span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="dt">char</span>* msgs[<span class="dv">5</span>] = {</span>
+<span id="cb8-8"><a href="#cb8-8"></a>   <span class="st">&quot;ABC&quot;</span>, <span class="st">&quot;DEF&quot;</span>, <span class="st">&quot;GHI&quot;</span>, <span class="st">&quot;&quot;</span>,</span>
+<span id="cb8-9"><a href="#cb8-9"></a>   <span class="st">&quot;JKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVXYXYZ&quot;</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>   };</span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">5</span>; ++i)</span>
+<span id="cb8-12"><a href="#cb8-12"></a>   printf(<span class="st">&quot;%s</span><span class="sc">\n</span><span class="st">&quot;</span>, msgs[i]);</span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="dt">char</span>* msg[<span class="dv">5</span>] = {</span>
+<span id="cb8-14"><a href="#cb8-14"></a>   (<span class="dt">char</span>*)calloc(<span class="dv">4</span>,<span class="dv">4</span>), (<span class="dt">char</span>*)calloc(<span class="dv">4</span>,<span class="dv">4</span>), (<span class="dt">char</span>*)calloc(<span class="dv">4</span>,<span class="dv">4</span>),</span>
+<span id="cb8-15"><a href="#cb8-15"></a>   (<span class="dt">char</span>*)calloc(<span class="dv">1</span>,<span class="dv">1</span>), (<span class="dt">char</span>*)calloc(<span class="dv">65</span>,<span class="dv">65</span>)</span>
+<span id="cb8-16"><a href="#cb8-16"></a>   };</span>
+<span id="cb8-17"><a href="#cb8-17"></a>strncpy(msg[<span class="dv">0</span>], <span class="st">&quot;ABC&quot;</span>, <span class="dv">4</span>);</span>
+<span id="cb8-18"><a href="#cb8-18"></a>strncpy(msg[<span class="dv">1</span>], <span class="st">&quot;DEF&quot;</span>, <span class="dv">4</span>);</span>
+<span id="cb8-19"><a href="#cb8-19"></a>strncpy(msg[<span class="dv">2</span>], <span class="st">&quot;GHI&quot;</span>, <span class="dv">4</span>);</span>
+<span id="cb8-20"><a href="#cb8-20"></a>strncpy(msg[<span class="dv">3</span>], <span class="st">&quot;&quot;</span>, <span class="dv">1</span>);</span>
+<span id="cb8-21"><a href="#cb8-21"></a>strncpy(msg[<span class="dv">4</span>], <span class="st">&quot;JKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVXYXYZ&quot;</span>, <span class="dv">65</span>);</span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">5</span>; ++i)</span>
+<span id="cb8-23"><a href="#cb8-23"></a>   printf(<span class="st">&quot;%s</span><span class="sc">\n</span><span class="st">&quot;</span>, msg[i]);</span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; <span class="dv">5</span>; ++i)</span>
+<span id="cb8-25"><a href="#cb8-25"></a>   free(msg[i]);</span></code></pre></div>
+<hr />
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> ST {</span>
+<span id="cb9-2"><a href="#cb9-2"></a>   <span class="dt">int</span> mi;</span>
+<span id="cb9-3"><a href="#cb9-3"></a>   <span class="dt">double</span> md;</span>
+<span id="cb9-4"><a href="#cb9-4"></a>   <span class="dt">char</span> name[<span class="dv">13</span>];</span>
+<span id="cb9-5"><a href="#cb9-5"></a>   } ST;</span>
+<span id="cb9-6"><a href="#cb9-6"></a></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="dt">void</span> fts (ST param) { ··· }</span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="dt">void</span> fta (<span class="dt">int</span> arr[], <span class="dt">size_t</span> count) { ··· }</span>
+<span id="cb9-9"><a href="#cb9-9"></a></span>
+<span id="cb9-10"><a href="#cb9-10"></a>ST ts = { <span class="dv">11</span>, <span class="fl">22.34</span>, <span class="st">&quot;ABC&quot;</span> };</span>
+<span id="cb9-11"><a href="#cb9-11"></a>   ts = (ST){ <span class="dv">12</span>, <span class="fl">23.35</span>, <span class="st">&quot;DEF&quot;</span> };</span>
+<span id="cb9-12"><a href="#cb9-12"></a>fts(ts);</span>
+<span id="cb9-13"><a href="#cb9-13"></a>fts((ST){<span class="dv">13</span>, <span class="fl">3.4</span>, <span class="st">&quot;FIVE SIX&quot;</span>});</span>
+<span id="cb9-14"><a href="#cb9-14"></a></span>
+<span id="cb9-15"><a href="#cb9-15"></a>ST tt = { .md = <span class="fl">23.45</span>, .mi = <span class="dv">123</span>, <span class="st">&quot;ABC&quot;</span> };</span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="dt">int</span> ars[<span class="dv">55</span>] = { [<span class="dv">1</span>] = <span class="dv">22</span>, [<span class="dv">0</span>] = <span class="dv">11</span>, [<span class="dv">22</span>] = <span class="dv">99</span>, etc. };</span>
+<span id="cb9-17"><a href="#cb9-17"></a></span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="dt">int</span>* arr;</span>
+<span id="cb9-19"><a href="#cb9-19"></a>arr = (<span class="dt">int</span>[]){<span class="dv">11</span>, <span class="dv">22</span>, <span class="dv">33</span>, <span class="dv">44</span>};</span>
+<span id="cb9-20"><a href="#cb9-20"></a>fta(arr);</span>
+<span id="cb9-21"><a href="#cb9-21"></a>fta((<span class="dt">int</span>[]){<span class="dv">22</span>, <span class="dv">23</span>, <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">26</span>}, <span class="dv">5</span>);</span></code></pre></div>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+<p><br />
+</p>
+</div></main>
+<footer>
+<div class="ftrleft"><a href="http://www.incusdata.com" title="Main Site">© 2020 Incus Data (Pty) Ltd.</a>
+<a href="https://za.linkedin.com/company/incus-data-pty-ltd"><span class="icon-linkedin-rect"></span></a>
+<a href="https://www.facebook.com/incusdata/"><span class="icon-facebook-rect"></span></a></div>
+</div>
+<div class="ftrright">Made with 
+   <a href="http://www.pandoc.org"
+      title="Pandoc - a universal document converter">
+      Pandoc</a>,
+   <a href="https://github.com/adobe-fonts/source-serif-pro#source-serif-pro"
+      title="GitHub — Adobe / Source Serif Pro">Source</a>,
+   <a href="https://mozilla.github.io/Fira/"
+      title="Free sans-serif font from Mozilla">Fira</a> &amp;
+   <a href="https://be5invis.github.io/Iosevka/"
+      title="Free, condensed monospaced font">Iosevka</a>
+</div>
+</footer>
+</body>
+<!-- script>document.write('<script src="res/live.js"></'+'script>')</script -->
+</html>

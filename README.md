@@ -29,3 +29,9 @@ todo:
 	* js startup [re]configuration script and shutdown script: handler contexts inherits from main context
           in terms of script engine initialization
 	* multiport spinups, exposed in scripting language on threads
+
+Extra Topics/Tools to Learn/Try out:
+	* CMake (example given)
+	* Astyle
+	* Vim (vimcast)
+	* https://cdecl.org/

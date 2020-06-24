@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/runner/NegativeLightcoralLocatorprogram/cgi/incus/cadv/arrtype/res/platform.c
+platform.h
+/home/runner/NegativeLightcoralLocatorprogram/cgi/incus/cadv/arrtype/res/platform.h
+
+platform.h
+

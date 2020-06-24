@@ -1,0 +1,1 @@
+/usr/bin/cc    CMakeFiles/arrtype.dir/src/main.c.o  -o ../bin/a.cgi libplatform.a 
