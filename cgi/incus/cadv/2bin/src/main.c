@@ -22,6 +22,12 @@ int main(int argc,char**argv,char**envp){
 	float           f=1.23;
 	double          d=1.23;
 	long double    ld=1.23;
+	struct{
+		unsigned char uc0;
+		unsigned char uc1;
+		unsigned char uc2;
+		unsigned char uc3;
+	}              as={0,1,2,3};
 	printf("uc: ");tobinstream(&uc,sizeof(uc),stdout);
 	printf("sc: ");tobinstream(&uc,sizeof(uc),stdout);
 	printf("us: ");tobinstream(&ss,sizeof(ss),stdout);
@@ -33,6 +39,7 @@ int main(int argc,char**argv,char**envp){
 	printf(" f: ");tobinstream(&f,sizeof(f),stdout);
 	printf(" d: ");tobinstream(&d,sizeof(d),stdout);
 	printf("ld: ");tobinstream(&ld,sizeof(ld),stdout);
+	printf("as: ");tobinstream(&as,sizeof(as),stdout);
 	return EXIT_SUCCESS;
 }
 void tobinstream(void*data,size_t sz,FILE*fp){
