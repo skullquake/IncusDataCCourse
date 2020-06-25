@@ -35,4 +35,4 @@ Extra Topics/Tools to Learn/Try out:
 	* Astyle
 	* Vim (vimcast)
 	* https://cdecl.org/
-*
+	* #if defined TEST_TOBIN - conditional main file included for test - try this technique when making libraries
