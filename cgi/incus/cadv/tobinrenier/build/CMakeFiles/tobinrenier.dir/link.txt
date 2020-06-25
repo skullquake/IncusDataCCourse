@@ -1,0 +1,1 @@
+/usr/bin/cc    CMakeFiles/tobinrenier.dir/src/main.c.o CMakeFiles/tobinrenier.dir/src/tobin.c.o  -o ../bin/a.cgi libplatform.a 

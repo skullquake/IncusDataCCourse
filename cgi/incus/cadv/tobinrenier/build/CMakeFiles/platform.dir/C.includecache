@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/skullquake/src/skullquake/IncusDataCCourse/cgi/incus/cadv/tobinrenier/res/platform.c
+platform.h
+/home/skullquake/src/skullquake/IncusDataCCourse/cgi/incus/cadv/tobinrenier/res/platform.h
+
+platform.h
+
