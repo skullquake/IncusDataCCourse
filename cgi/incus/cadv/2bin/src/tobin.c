@@ -2,9 +2,15 @@
  * @brief: prints out binary representation of data
  *         note that endianness influences the order of members in bitfields in terms of distribution in memory
  */
+#ifndef __cplusplus
 #include<stdio.h>
+#include<stdint.h>
 #include<stdlib.h>
-#include<stdlib.h>
+#else
+#include<cstdio>
+#include<cstdint>
+#include<cstdlib>
+#endif
 void tobinstream(void*data,size_t sz,FILE*fp){
 	if(data==NULL||sz<1||fp==NULL)return;
 	for(size_t i=0;i<sz;++i){
