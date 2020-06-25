@@ -6,7 +6,6 @@
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
-#include"b.h"
 char*genstr(const char*glyphs,size_t len);
 int fitness(char*s0,char*s1);
 char*mate(char*s0,char*s1,char*s3);

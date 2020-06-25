@@ -7,7 +7,6 @@
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
-#include"b.h"
 #include"ea/ga.h"
 #include"db/dbtest.h"
 #include"duktape/exec.h"
