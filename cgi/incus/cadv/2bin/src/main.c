@@ -5,13 +5,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdlib.h>
-#include"cJSON/cJSON.h"
-/*!@brief: convert to binary representation
- * @param data data to convert
- * @param sz   size of data
- * @param fp   stream to write converted string to
- */
-void tobinstream(void*data,size_t sz,FILE*fp);
+#include"tobin.h"
 int main(int argc,char**argv,char**envp){
 	argc=argc;
 	argv=argv;
@@ -66,19 +60,4 @@ int main(int argc,char**argv,char**envp){
 	printf("au1: ");tobinstream(&au1,sizeof(au1),stdout);
 	printf("bf:  ");tobinstream(&bf,sizeof(bf),stdout);
 	return EXIT_SUCCESS;
-}
-void tobinstream(void*data,size_t sz,FILE*fp){
-	if(data==NULL||sz<1||fp==NULL)return;
-	for(size_t i=0;i<sz;++i){
-		//todo: improve
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x80)>0);
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x40)>0);
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x20)>0);
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x10)>0);
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x08)>0);
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x04)>0);
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x02)>0);
-		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x01)>0);
-		fprintf(fp," ");
-	}fprintf(fp,"\n");
 }
