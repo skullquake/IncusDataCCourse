@@ -5,5 +5,11 @@
 #ifndef TOBIN_H
 #define TOBIN_H
 #include<stdio.h>
+/*!@brief converts data to binary string and writes to stream
+ * @param data data
+ * @param sz   data size
+ * @param fp   stream to write to
+ * @return     void
+ */
 extern void tobinstream(void*data,size_t sz,FILE*fp);
 #endif
