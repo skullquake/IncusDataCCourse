@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -v http://localhost:8999/cgi/tpl/bin/a.cgi

@@ -38,6 +38,12 @@ int main(int argc,char**argv,char**envp){
 	}              au1={0x00,0x00};
 	au0.uc=1;
 	au1.ull=2;
+	struct{//bitfield
+		unsigned flda:4;//field a
+		unsigned fldb:4;//field b
+		unsigned     :2;//junk
+		signed   fldc:6;//field c
+	}              bf={flda:0x1,fldb:0x01,fldc:0x01};
 	printf("uc:  ");tobinstream(&uc,sizeof(uc),stdout);
 	printf("sc:  ");tobinstream(&uc,sizeof(uc),stdout);
 	printf("us:  ");tobinstream(&ss,sizeof(ss),stdout);
@@ -52,6 +58,7 @@ int main(int argc,char**argv,char**envp){
 	printf("as:  ");tobinstream(&as,sizeof(as),stdout);
 	printf("au0: ");tobinstream(&au0,sizeof(au0),stdout);
 	printf("au1: ");tobinstream(&au1,sizeof(au1),stdout);
+	printf("bf:  ");tobinstream(&bf,sizeof(bf),stdout);
 	return EXIT_SUCCESS;
 }
 void tobinstream(void*data,size_t sz,FILE*fp){
