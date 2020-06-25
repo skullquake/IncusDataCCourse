@@ -184,7 +184,7 @@ doc:\
 	$(SRC) \
 	$(README) \
 	$(DOXYFILE) \
-	makefile
+	Makefile
 	@echo building documentation...
 	@$(DOXYGEN)
 #-------------------------------------------------------------------------------
