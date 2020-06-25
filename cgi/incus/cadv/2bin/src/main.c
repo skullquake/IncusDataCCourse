@@ -5,7 +5,7 @@
 #include<stdlib.h>
 #include<stdlib.h>
 #include"cJSON/cJSON.h"
-void tobin(void*data,size_t sz,FILE*);
+void tobinstream(void*data,size_t sz,FILE*);
 int main(int argc,char**argv,char**envp){
 	argc=argc;
 	argv=argv;
@@ -22,20 +22,20 @@ int main(int argc,char**argv,char**envp){
 	float           f=1.23;
 	double          d=1.23;
 	long double    ld=1.23;
-	printf("uc: ");tobin(&uc,sizeof(uc),stdout);
-	printf("sc: ");tobin(&uc,sizeof(uc),stdout);
-	printf("us: ");tobin(&ss,sizeof(ss),stdout);
-	printf("ss: ");tobin(&us,sizeof(us),stdout);
-	printf("ui: ");tobin(&si,sizeof(si),stdout);
-	printf("si: ");tobin(&ui,sizeof(ui),stdout);
-	printf("sl: ");tobin(&sl,sizeof(sl),stdout);
-	printf("ul: ");tobin(&ul,sizeof(ul),stdout);
-	printf(" f: ");tobin(&f,sizeof(f),stdout);
-	printf(" d: ");tobin(&d,sizeof(d),stdout);
-	printf("ld: ");tobin(&ld,sizeof(ld),stdout);
+	printf("uc: ");tobinstream(&uc,sizeof(uc),stdout);
+	printf("sc: ");tobinstream(&uc,sizeof(uc),stdout);
+	printf("us: ");tobinstream(&ss,sizeof(ss),stdout);
+	printf("ss: ");tobinstream(&us,sizeof(us),stdout);
+	printf("ui: ");tobinstream(&si,sizeof(si),stdout);
+	printf("si: ");tobinstream(&ui,sizeof(ui),stdout);
+	printf("sl: ");tobinstream(&sl,sizeof(sl),stdout);
+	printf("ul: ");tobinstream(&ul,sizeof(ul),stdout);
+	printf(" f: ");tobinstream(&f,sizeof(f),stdout);
+	printf(" d: ");tobinstream(&d,sizeof(d),stdout);
+	printf("ld: ");tobinstream(&ld,sizeof(ld),stdout);
 	return EXIT_SUCCESS;
 }
-void tobin(void*data,size_t sz,FILE*fp){
+void tobinstream(void*data,size_t sz,FILE*fp){
 	for(size_t i=0;i<sz;++i){
 		//todo: improve
 		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x80)>0);
