@@ -6,7 +6,12 @@
 #include<stdlib.h>
 #include<stdlib.h>
 #include"cJSON/cJSON.h"
-void tobinstream(void*data,size_t sz,FILE*);
+/*!@brief: convert to binary representation
+ * @param data data to convert
+ * @param sz   size of data
+ * @param fp   stream to write converted string to
+ */
+void tobinstream(void*data,size_t sz,FILE*fp);
 int main(int argc,char**argv,char**envp){
 	argc=argc;
 	argv=argv;

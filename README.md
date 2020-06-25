@@ -37,3 +37,4 @@ Extra Topics/Tools to Learn/Try out:
 	* https://cdecl.org/
 	* #if defined TEST_TOBIN - conditional main file included for test - try this technique when making libraries
 	* uuid generation of header guard identifiers
+	* #if defined __cplusplus in c files
