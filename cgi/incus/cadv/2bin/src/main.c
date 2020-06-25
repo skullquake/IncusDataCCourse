@@ -1,5 +1,6 @@
 /*!@file: ./src/main.c
  * @brief: prints out binary representation of data
+ *         note that endianness influences the order of members in bitfields in terms of distribution in memory
  */
 #include<stdio.h>
 #include<stdlib.h>
