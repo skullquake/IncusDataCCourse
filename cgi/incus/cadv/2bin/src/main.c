@@ -36,6 +36,7 @@ int main(int argc,char**argv,char**envp){
 	return EXIT_SUCCESS;
 }
 void tobinstream(void*data,size_t sz,FILE*fp){
+	if(data==NULL||sz<1||fp==NULL)return;
 	for(size_t i=0;i<sz;++i){
 		//todo: improve
 		fprintf(fp,"%d",((*(((unsigned char*)data)+i))&0x80)>0);
