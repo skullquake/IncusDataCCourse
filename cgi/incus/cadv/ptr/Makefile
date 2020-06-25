@@ -13,7 +13,7 @@ ifeq ($(OS),Windows_NT)
         THEOS := $(patsubst MINGW64%,MINGW,$(THEOS))
         THEOS := $(patsubst MINGW%,MINGW64,$(THEOS))
     endif
-    EXT := .exe
+    EXT := .cgi
 else
     UNAME_S := $(shell uname -s)
     THEOS := $(UNAME_S)
@@ -24,7 +24,7 @@ else
     ifneq ($(filter arm%,$(UNAME_P)),)
         THEOS=ARM
     endif
-    EXT := .out
+    EXT := .cgi
 endif
 #-------------------------------------------------------------------------------
 #PROCESSOR DETECTION
@@ -54,15 +54,16 @@ CC=gcc
 STRIP=strip
 BINDIR=./bin/
 SRCDIR=src
-#  -std=c99
 CFLAGS=\
   -Wall\
   -Wextra\
   -Wpedantic\
+  -std=c99\
   -I./src\
   -I./src/sqlite\
   -DDUK_USE_BUFFEROBJECT_SUPPORT\
   -DDUK_USE_FATAL_MAXLEN
+
 #--save-temps
 LDFLAGS=-lpthread -lm -ldl
 ifeq ($(THEOS),Windows)
@@ -183,7 +184,7 @@ doc:\
 	$(SRC) \
 	$(README) \
 	$(DOXYFILE) \
-	Makefile
+	makefile
 	@echo building documentation...
 	@$(DOXYGEN)
 #-------------------------------------------------------------------------------

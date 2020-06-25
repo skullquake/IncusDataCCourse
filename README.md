@@ -38,3 +38,6 @@ Extra Topics/Tools to Learn/Try out:
 	* #if defined TEST_TOBIN - conditional main file included for test - try this technique when making libraries
 	* uuid generation of header guard identifiers
 	* #if defined __cplusplus in c files
+
+Compilation Notes:
+	* std-c99 breaks ctemplate - debug width gdb whats going on here

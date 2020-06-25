@@ -7,6 +7,7 @@
 #include<stdlib.h>
 #include"duktape/exec.h"
 #include"srv/srv.h"
+#include"tpl/tpl.h"
 #define OPTPARSE_IMPLEMENTATION
 //#define OPTPARSE_API static
 #include"optparse/optparse.h"
@@ -23,6 +24,7 @@ int cli_parse(int argc,char**argv){
 	    {"serve",'s',OPTPARSE_NONE},
 	    {"port",'p',OPTPARSE_REQUIRED},
 	    {"init",'i',OPTPARSE_REQUIRED},
+	    {"tpl",'t',OPTPARSE_NONE},
 	    {0}
 	};
 	char *arg;
@@ -54,6 +56,9 @@ int cli_parse(int argc,char**argv){
 	    case 's':
 	        bool_srv=true;
 	        break;
+	    case 't':
+	        tpl_test();
+	        break;
 	    case '?':
 	        fprintf(stderr,"%s: %s\n",argv[0],options.errmsg);
 	        exit(EXIT_FAILURE);
@@ -81,6 +86,7 @@ void printhelp(void){
 	printf("\t -s         : Start server\n");
 	printf("\t -p PORT    : Set server port\n");
 	printf("\t -i PATH    : Specify server initialization script\n");
+	printf("\t -t         : Template test\n");
 	printf("\e[40;38;5;82mLong options\e[0m\n");
 	printf("\t --help     : Help\n");
 	printf("\t --version  : Version\n");
@@ -88,4 +94,5 @@ void printhelp(void){
 	printf("\t --serve    : Start server\n");
 	printf("\t -port PORT : Set server port\n");
 	printf("\t -init PATH : Specify server initialization script\n");
+	printf("\t -tpl       : Template test\n");
 }
