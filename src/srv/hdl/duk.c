@@ -6,19 +6,40 @@
 #include"duktape/duktape.h"
 #include"duktape/register.h"
 #include<stdio.h>
+#include<stdint.h>
+#include<string.h>
+#define NUM_SESSIONS 32
+#define SESSION_COOKIE_NAME "mgs"
+/*! struct describing session
+ */
+typedef struct session{
+	uint64_t id;
+	double created;
+	double last_used;
+	char*user;
+	int userdata;
+}session;
+session s_sessions[NUM_SESSIONS];
+
 extern struct mg_serve_http_opts s_http_server_opts;
 static void dukexec(char*path,struct mg_connection*nc,int ev,void *ev_data);
+/*! Extract session from cookie
+ *  @param hm `struct http_message`
+ *  @return `struct session`
+ */
+static struct session *get_session(struct http_message*hm);
 /*! Event handler for js execution. Exepcts url argument scr with value of path
  *  to script to execute
  */
 void hdl_duk(struct mg_connection*c,int ev,void *p){
 	DBGVAR(hdl_duk,p);
 	if(ev==MG_EV_HTTP_REQUEST){
-			struct http_message*hm=(struct http_message*)p;
-			struct mg_str buf=hm->query_string;
-			char*scrkey="scr";
-			char scrval[64];
-			int ret = mg_get_http_var(&buf,scrkey,scrval, sizeof(scrval));
+		struct http_message*hm=(struct http_message*)p;
+		struct mg_str buf=hm->query_string;
+		char*scrkey="scr";
+		char scrval[64];
+		int ret = mg_get_http_var(&buf,scrkey,scrval, sizeof(scrval));
+		session*s=get_session(hm);
 		if(ret>0){
 			//mg_printf(c,"HTTP/1.0 200 OK\r\n\r\nfound");
 			dukexec(scrval,c,ev,p);
@@ -74,4 +95,34 @@ static void dukexec(char*path,struct mg_connection*nc,int ev,void *ev_data){
 	}else{
 		fprintf(stderr,"Error:duk_exec:Failed to open file\n");
 	}
+}
+static struct session *get_session(struct http_message*hm){
+	printf("info:get_session:start\n");
+	session*ret=NULL;
+	char ssid_buf[64];
+	char*ssid=ssid_buf;
+	struct mg_str*cookie_header=mg_get_http_header(hm,"cookie");
+	if(cookie_header==NULL){
+		printf("info:get_session:no cookie header found\n");
+		goto clean;
+	}
+	if(!mg_http_parse_header2(cookie_header,SESSION_COOKIE_NAME,&ssid,sizeof(ssid_buf))){
+		printf("warning:get_session:failed to obtain session cookie\n");
+		goto clean;
+	}
+	uint64_t sid=strtoull(ssid,NULL,16);
+	int i;
+	for(i=0;i<NUM_SESSIONS;++i){
+		if(s_sessions[i].id==sid){
+			printf("info:get_session:session found\n");
+			s_sessions[i].last_used=mg_time();
+			ret=&s_sessions[i];
+			goto clean;
+		}
+	}
+	printf("info:get_session:session not found\n");
+	clean:
+		if(ssid!=ssid_buf)free(ssid);
+	printf("info:get_session:end\n");
+	return ret;
 }

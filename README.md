@@ -33,11 +33,20 @@ todo:
 Extra Topics/Tools to Learn/Try out:
 	* CMake (example given)
 	* Astyle
-	* Vim (vimcast)
+	* Vim (vimcast), http://vimcasts.org/
 	* https://cdecl.org/
 	* #if defined TEST_TOBIN - conditional main file included for test - try this technique when making libraries
 	* uuid generation of header guard identifiers
 	* #if defined __cplusplus in c files
+	* ctemplate check features
+	* c mustache, there are a couple of options, find a zeroconf one
+		* https://github.com/x86-64/mustache-c/tree/master/src
+		* https://gitlab.com/jobol/mustach
+	* https://github.com/browsh-org/browsh/releases, https://www.hanselman.com/blog/LynxIsDeadLongLiveBrowshForTextbasedInternetBrowsing.aspx, https://askubuntu.com/questions/29540/browsing-the-internet-from-the-command-line
+	* install and try out zeal
+	* nohup, try with python chat
+	* lots of books, https://download.itadmins.net/Linux/
+	* https://github.com/rhysd/vim.wasm
 
 Compilation Notes:
 	* std-c99 breaks ctemplate - debug width gdb whats going on here

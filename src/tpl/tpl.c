@@ -3,6 +3,10 @@
  */
 #include"tpl/tpl.h"
 #include<stdio.h>
+#include<stdint.h>
+#include<inttypes.h>
+#include<string.h>
+#include<errno.h>
 #include"ctemplate/ctemplate.h"
 /* @brief simple template arguments test
  */
@@ -34,9 +38,9 @@ static void tpl_test_loop(void){
 	TMPL_loop*loop;
 	loop=0;
 	f=1;
-	for(n=1;n<11;n++){
+	for(n=1;n<4096;n++){
 		sprintf(txt1,"%d",n);
-		sprintf(txt2,"%d",f*=n);
+		sprintf(txt2,"%d",n);//f*=n);
 		vl=TMPL_add_var(0,"n",txt1,"nfact",txt2,0);
 		loop=TMPL_add_varlist(loop,vl);
 	}
@@ -45,3 +49,4 @@ static void tpl_test_loop(void){
 	TMPL_write("./tpl/test_loop.html",0,0,mainlist,stdout,stderr);
 	TMPL_free_varlist(mainlist);
 }
+
