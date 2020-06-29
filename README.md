@@ -48,7 +48,9 @@ Extra Topics/Tools to Learn/Try out:
 	* Vim (vimcast), http://vimcasts.org/
 	* https://cdecl.org/
 	* #if defined TEST_TOBIN - conditional main file included for test - try this technique when making libraries
-	* uuid generation of header guard identifiers
+	* uuid generation of header guard identifiers, this should be included in the makefile as a target
+	  both windows (cmd/powershell) and bash. Alternatively, if possible, this could be done in the
+	  makefile itself
 	* #if defined __cplusplus in c files
 	* ctemplate check features
 	* c mustache, there are a couple of options, find a zeroconf one

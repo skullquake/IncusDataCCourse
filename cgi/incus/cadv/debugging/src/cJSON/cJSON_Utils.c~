@@ -291,8 +291,8 @@ cJSONUtils_FindPointerFromObjectTo (const cJSON * const object,
 		cJSON_malloc (strlen ((char *) target_pointer) +
 				 pointer_encoded_length ((unsigned char
 							     *)
-							    current_child->
-							    string)  +2);
+							    current_child->string)
+				  +2);
 	      full_pointer[0] = '/';
 	      encode_string_as_pointer (full_pointer + 1,
 					   (unsigned char *)
@@ -1440,8 +1440,7 @@ create_patches (cJSON * const patches, const unsigned char *const path,
 	  /* generate patches for all array elements that exist in both "from" and "to" */
 	  for (index = 0; (from_child != NULL) && (to_child != NULL);
 	       (void) (from_child = from_child->next), (void) (to_child =
-							       to_child->
-							       next),
+							       to_child->next),
 	       index++)
 	  
 	  {
@@ -1650,8 +1649,7 @@ merge_patch (cJSON * target, const cJSON * const patch,
 	    
 	    {
 	      cJSON_DeleteItemFromObjectCaseSensitive (target,
-							  patch_child->
-							  string);
+							  patch_child->string);
 	    }
 	  
 	  else
@@ -1671,8 +1669,7 @@ merge_patch (cJSON * target, const cJSON * const patch,
 	    {
 	      replace_me =
 		cJSON_DetachItemFromObjectCaseSensitive (target,
-							    patch_child->
-							    string);
+							    patch_child->string);
 	    }
 	  
 	  else
