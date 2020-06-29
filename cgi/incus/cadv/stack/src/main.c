@@ -10,7 +10,7 @@
  *             ec: 0x7f594e80b02c-+
  *
  *             m:x:0x7fffdade11f5-+
- *             m:y:0x7fffdade11f6 |- local variables in main, grows up
+ *             m:y:0x7fffdade11f6 |- local variables in main, ascending
  *             m:z:0x7fffdade11f7-+
  *
  *             m:  0x7f594e608117 |- function address low
