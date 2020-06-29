@@ -4,24 +4,6 @@
  *             local variables
  *             parameters
  *         Some sample outputs:
- *         DJGPP
- *             ea:     f228-+
- *             eb:     e4d0 |- external level variables, order ???
- *             ec:     e4d4-+
- *
- *             m:x:   9280f-+
- *             m:y:   9280e |- local variables in main, descending
- *             m:z:   9280d-+
- *
- *             m:      173c |- function address low
- *
- *             a:a:   927cc-+
- *             a:b:   927c8 |- parameters descending
- *             a:c:   927c4-+
- *
- *             a:d:   927df-+
- *             a:e:   927de |- local variables descending
- *             a:f:   927dd-+
  *         GCC LINUX x86_64
  *             ea: 0x7f594e80b070-+
  *             eb: 0x7f594e80b028 |- external level variables, order ???
@@ -76,6 +58,26 @@
  *             a:d:0x7fffe40109c7-+
  *             a:e:0x7fffe40109c6 |- local variables descending
  *             a:f:0x7fffe40109c5-+
+ *
+ *         DJGPP DOS
+ *             ea:     f228-+
+ *             eb:     e4d0 |- external level variables, order ???
+ *             ec:     e4d4-+
+ *
+ *             m:x:   9280f-+
+ *             m:y:   9280e |- local variables in main, descending
+ *             m:z:   9280d-+
+ *
+ *             m:      173c |- function address low
+ *
+ *             a:a:   927cc-+
+ *             a:b:   927c8 |- parameters descending
+ *             a:c:   927c4-+
+ *
+ *             a:d:   927df-+
+ *             a:e:   927de |- local variables descending
+ *             a:f:   927dd-+
+
  *         BCC DOS
  *             m:x:22A2:0FCB-+
  *             m:y:22A2:0FCA |- locals, in this case descending addresses
@@ -84,29 +86,29 @@
  *             m:  224B:0077 |- function address low
  *
  *             a:a:22A2:0FC2-+
- *             a:b:22A2:0FC4 |- parameters variables grows up
+ *             a:b:22A2:0FC4 |- parameters ascending
  *             a:c:22A2:0FC6-+
  *
  *             a:d:22A2:0FBB-+
- *             a:e:22A2:0FBA |- local variables grows down
+ *             a:e:22A2:0FBA |- local variables ascending
  *             a:f:22A2:0FB9-+
  *         QC DOS
  *             ea: 0294:0042-+
- *             eb: 0294:0044 |- external level variables, in this case ascending addresses
+ *             eb: 0294:0044 |- external level variables, ascending
  *             ec: 0294:0046-+
  *
  *             m:x:0294:0E16-+
- *             m:y:0294:0E14 |- locals, in this case descending addresses
+ *             m:y:0294:0E14 |- locals descending
  *             m:z:0294:0E12-+
  *
  *             m:  0294:00D7 |- function address low
  *
  *             a:a:0294:0E08-+
- *             a:b:0294:0E0A |- parameters variables grows up
+ *             a:b:0294:0E0A |- parameters ascending
  *             a:c:0294:0E0C-+
  *
  *             a:d:0294:0E02-+
- *             a:e:0294:0E00 |- local variables grows down
+ *             a:e:0294:0E00 |- local variables descending
  *             a:f:0294:0DFE-+
  */
 #include<stdio.h>
