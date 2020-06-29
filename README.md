@@ -59,6 +59,9 @@ Extra Topics/Tools to Learn/Try out:
 	* nohup, try with python chat
 	* lots of books, https://download.itadmins.net/Linux/
 	* https://github.com/rhysd/vim.wasm
+	* add uuid makefile phony target for these header guards
+	* add pretty target, to prettify code, only code that has changed, there is a basic example in cgi/incus/cadv/debugging/Makefile
+	* create TOUCH makefile function, as windows has no touch, there is a basic one at cgi/incus/cadv/debugging/Makefile
 
 Compilation Notes:
 	* std-c99 breaks ctemplate - debug width gdb whats going on here
