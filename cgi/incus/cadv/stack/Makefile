@@ -50,8 +50,8 @@ else ifeq ($(THEOS),$(filter $(THEOS),Linux Darwin ARM))
     endif
 endif
 #-------------------------------------------------------------------------------
-CC=gcc
 CC=tcc
+CC=gcc
 STRIP=strip
 BINDIR=./bin/
 SRCDIR=src

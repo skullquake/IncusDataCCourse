@@ -22,7 +22,7 @@
  *             a:d:   927df-+
  *             a:e:   927de |- local variables descending
  *             a:f:   927dd-+
- *         GCC LINUX
+ *         GCC LINUX x86_64
  *             ea: 0x7f594e80b070-+
  *             eb: 0x7f594e80b028 |- external level variables, order ???
  *             ec: 0x7f594e80b02c-+
@@ -40,7 +40,25 @@
  *             a:d:0x7fffdade11b5-+
  *             a:e:0x7fffdade11b6 |- local variables descending
  *             a:f:0x7fffdade11b7-+
- *         TCC LINUX
+ *         GCC LINUX ARM64
+ *             ea: 0x55940b6048-+
+ *             eb: 0x55940b6018 |- externals ???
+ *             ec: 0x55940b601c-+
+ *
+ *             m:x:0x7fe8273f07-+
+ *             m:y:0x7fe8273f06 |- locals descending
+ *             m:z:0x7fe8273f05-+
+ *
+ *             m:  0x55940b3928 |- function low
+ *
+ *             a:a:0x7fe8273e6f-+
+ *             a:b:0x7fe8273e6e |- parameters descending
+ *             a:c:0x7fe8273e6d-+
+ *
+ *             a:d:0x7fe8273e6c-+
+ *             a:e:0x7fe8273e6b |- locals descending
+ *             a:f:0x7fe8273e6a-+
+ *         TCC LINUX x86_64
  *             ea: 0x60ce08-+
  *             eb: 0x60ce0c |- locals, in this case ascending addresses
  *             ec: 0x60ce10-+
