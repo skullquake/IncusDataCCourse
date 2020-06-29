@@ -10,19 +10,19 @@
  *             ec:     e4d4-+
  *
  *             m:x:   9280f-+
- *             m:y:   9280e |- local variables in main, grows down
+ *             m:y:   9280e |- local variables in main, descending
  *             m:z:   9280d-+
  *
  *             m:      173c |- function address low
  *
  *             a:a:   927cc-+
- *             a:b:   927c8 |- parameters grows down
+ *             a:b:   927c8 |- parameters descending
  *             a:c:   927c4-+
  *
  *             a:d:   927df-+
- *             a:e:   927de |- local variables grows down
+ *             a:e:   927de |- local variables descending
  *             a:f:   927dd-+
- *         GCC
+ *         GCC LINUX
  *             ea: 0x7f594e80b070-+
  *             eb: 0x7f594e80b028 |- external level variables, order ???
  *             ec: 0x7f594e80b02c-+
@@ -34,13 +34,31 @@
  *             m:  0x7f594e608117 |- function address low
  *
  *             a:a:0x7fffdade11ac-+
- *             a:b:0x7fffdade11a8 |- parameters grows down
+ *             a:b:0x7fffdade11a8 |- parameters descending
  *             a:c:0x7fffdade11a4-+
  *
  *             a:d:0x7fffdade11b5-+
- *             a:e:0x7fffdade11b6 |- local variables grows down
+ *             a:e:0x7fffdade11b6 |- local variables descending
  *             a:f:0x7fffdade11b7-+
- *         BCC
+ *         TCC LINUX
+ *             ea: 0x60ce08-+
+ *             eb: 0x60ce0c |- locals, in this case ascending addresses
+ *             ec: 0x60ce10-+
+ *
+ *             m:x:0x7fffe40109f7
+ *             m:y:0x7fffe40109f6
+ *             m:z:0x7fffe40109f5
+ *
+ *             m:  0x40bfa5 |- function address low
+ *
+ *             a:a:0x7fffe40109d8-+
+ *             a:b:0x7fffe40109d0 |- parameters variables descending
+ *             a:c:0x7fffe40109c8-+
+ *
+ *             a:d:0x7fffe40109c7-+
+ *             a:e:0x7fffe40109c6 |- local variables descending
+ *             a:f:0x7fffe40109c5-+
+ *         BCC DOS
  *             m:x:22A2:0FCB-+
  *             m:y:22A2:0FCA |- locals, in this case descending addresses
  *             m:z:22A2:0FC9-+
@@ -54,7 +72,7 @@
  *             a:d:22A2:0FBB-+
  *             a:e:22A2:0FBA |- local variables grows down
  *             a:f:22A2:0FB9-+
- *         QC
+ *         QC DOS
  *             ea: 0294:0042-+
  *             eb: 0294:0044 |- external level variables, in this case ascending addresses
  *             ec: 0294:0046-+
