@@ -8,8 +8,7 @@
 #include<stdlib.h>
 #include"cJSON/cJSON.h"
 int main(int argc,char**argv,char**envp){
-	printf("Content-type: text/plain\r\n");
-	printf("\r\n");
+	printf("Content-type: text/plain\n\n");
 	{//using fixed strides
 		char buf[4][16]={
 			"foo",

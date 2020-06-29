@@ -3,12 +3,11 @@
  */
 #include<stdio.h>
 #include<stdlib.h>
-#include<stdlib.h>
-#include"cJSON/cJSON.h"
+#include<stdbool.h>
 int main(int argc,char**argv,char**envp){
 	argc=argc;
 	argv=argv;
 	envp=envp;
-	printf("Content-Type: text/plain\r\n\r\n");
+	printf("Content-Type: text/plain\n\n");
 	return EXIT_SUCCESS;
 }

@@ -55,22 +55,26 @@ STRIP=strip
 BINDIR=./bin/
 SRCDIR=src
 CFLAGS=\
-  -Wall\
-  -Wextra\
-  -Wpedantic\
-  -std=c99\
-  -I./src\
-  -I./src/sqlite\
-  -DDUK_USE_BUFFEROBJECT_SUPPORT\
-  -DDUK_USE_FATAL_MAXLEN
-
-#--save-temps
-LDFLAGS=-lpthread -lm -ldl
+	-Wall\
+	-Wextra\
+	-Wpedantic\
+	-std=c99\
+	-I./src\
+	-I./src/sqlite
+LDFLAGS=
 ifeq ($(THEOS),Windows)
 	SILENT=> NUL 2>&1
- 	LDFLAGS+=-lwsock32 -lws2_32
-elsea
+ 	LDFLAGS+=-lwsock32
+	LDFLAGS+=-lws2_32
+	CFLAGS-=-DDUK_USE_CURL
+	BINDIR=./bin/windows/
+else
 	LDFLAGS+=-lpthread
+	LDFLAGS+=-lm
+	LDFLAGS+=-ldl
+	LDFLAGS+=-lcurl
+	CFLAGS+=-DDUK_USE_CURL
+	BINDIR=./bin/linux/
 endif
 #-------------------------------------------------------------------------------
 #DOCUMENTATION TOOLS
@@ -80,6 +84,17 @@ DOT=dot
 #DOC=./dox/html/index.html
 README=./README.md
 DOXYFILE=Doxyfile
+#-------------------------------------------------------------------------------
+#RUN CONFIGURATION
+#-------------------------------------------------------------------------------
+PORT=5000
+INITSCR=./scr/srv/init.js 
+ifeq ($(THEOS),Windows)
+	PORT=5000
+else
+	PORT=5001
+endif
+
 #-------------------------------------------------------------------------------
 #BITBUCKET
 #-------------------------------------------------------------------------------
@@ -156,6 +171,11 @@ all:$(_BIN)
 #-------------------------------------------------------------------------------
 run:$(_BIN)
 	@$(_BIN) $(RUN_ARGS) 
+serve:$(_BIN)
+	@$(_BIN)\
+		--serve\
+		--port $(PORT)\
+		--init $(INITSCR)
 #-------------------------------------------------------------------------------
 $(_BIN):$(_OBJS)
 	@echo "generating $@..."
@@ -180,6 +200,13 @@ $(_BINDIR)%.o: %.c
 		-c $<\
 		-o $@
 #-------------------------------------------------------------------------------
+define dump
+objdump $(1) -t
+endef
+dumpall:\
+	$(_OBJS)
+	$(foreach obj,$(_OBJS),$(call dump,$(obj)))
+#-------------------------------------------------------------------------------
 doc:\
 	$(SRC) \
 	$(README) \
@@ -188,10 +215,14 @@ doc:\
 	@echo building documentation...
 	@$(DOXYGEN)
 #-------------------------------------------------------------------------------
-.phony:\
-	test\
-	run
+.phony:test
 #-------------------------------------------------------------------------------
 clean:
-	@-$(RMDIR) $(_BINDIR) $(SILENT)
+	$(RMDIR) $(_BINDIR)
+#$(SILENT)
 #-------------------------------------------------------------------------------
+test:
+	echo $(SRC)
+	echo $(_SRC)
+	echo $(OBJS)
+	echo $(_OBJS)

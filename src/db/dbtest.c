@@ -3,7 +3,7 @@
  */
 #include"db/dbtest.h"
 #include<stdio.h>
-#include<sqlite.h>
+#include"sqlite/sqlite.h"
 #include"incus/cadv/prg000.h"
 int dbtest(void){
   printf("info:sqlitetest:start\n");

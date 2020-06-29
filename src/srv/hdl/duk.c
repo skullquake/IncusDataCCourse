@@ -97,32 +97,32 @@ static void dukexec(char*path,struct mg_connection*nc,int ev,void *ev_data){
 	}
 }
 static struct session *get_session(struct http_message*hm){
-	printf("info:get_session:start\n");
+	//printf("info:get_session:start\n");
 	session*ret=NULL;
 	char ssid_buf[64];
 	char*ssid=ssid_buf;
 	struct mg_str*cookie_header=mg_get_http_header(hm,"cookie");
 	if(cookie_header==NULL){
-		printf("info:get_session:no cookie header found\n");
+		//printf("info:get_session:no cookie header found\n");
 		goto clean;
 	}
 	if(!mg_http_parse_header2(cookie_header,SESSION_COOKIE_NAME,&ssid,sizeof(ssid_buf))){
-		printf("warning:get_session:failed to obtain session cookie\n");
+		//printf("warning:get_session:failed to obtain session cookie\n");
 		goto clean;
 	}
 	uint64_t sid=strtoull(ssid,NULL,16);
 	int i;
 	for(i=0;i<NUM_SESSIONS;++i){
 		if(s_sessions[i].id==sid){
-			printf("info:get_session:session found\n");
+			//printf("info:get_session:session found\n");
 			s_sessions[i].last_used=mg_time();
 			ret=&s_sessions[i];
 			goto clean;
 		}
 	}
-	printf("info:get_session:session not found\n");
+	//printf("info:get_session:session not found\n");
 	clean:
 		if(ssid!=ssid_buf)free(ssid);
-	printf("info:get_session:end\n");
+	//printf("info:get_session:end\n");
 	return ret;
 }

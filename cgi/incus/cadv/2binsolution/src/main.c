@@ -4,7 +4,7 @@
 #include"main.h"
 #include"tobin.h"
 int main(int argc,char* argv[],char**envp){
-	printf("Content-Type: text/plain\r\n\r\n");
+	printf("Content-Type: text/plain\n\n");
 	printf("Hello");
 	char buf[sizeof(uint64_t) * 8 + 1] = {0};
 	printf("123 in binary: %s\n", tobin(buf, 123ULL, 16));

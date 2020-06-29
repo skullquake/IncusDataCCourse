@@ -26,7 +26,29 @@ void srv_start(char*port){
 	mg_set_protocol_http_websocket(c);
 	s_http_server_opts.document_root=".";
 	s_http_server_opts.cgi_file_pattern="**.ps1|**.py|**.cgi|**.bat|**.sh|**.exe$|**.out$";
-	//s_http_server_opts.cgi_interpreter="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -File ";
+
+	//set cgi interpreter based on host
+	printf("--------------------------\n");
+#ifdef WIN32
+	char cgi_host[]="WIN32";
+	char cgi_interpreter[]="C:\\Windows\\System32\\cmd.exe /s ";
+		//C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -File "
+#else
+	char cgi_host[]="LINUX";
+	char cgi_interpreter[]="";
+#endif
+	if(*cgi_host!='\0'){
+		printf("HOST: %s\n",cgi_host);
+	}else{
+		printf("HOST: NONE\n");
+	}
+	if(*cgi_interpreter!='\0'){
+		printf("SHELL: %s\n",cgi_interpreter);
+	}else{
+		printf("SHELL: NONE\n");
+	}
+	printf("--------------------------\n");
+
 	s_http_server_opts.enable_directory_listing="yes";
 	for(;;){
 		mg_mgr_poll(&mgr,POLLTIME);

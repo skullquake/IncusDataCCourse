@@ -485,6 +485,360 @@ static duk_ret_t native_dirent2json(duk_context*ctx){
 /*
 int stat (const char *filename, struct stat *buf)
 */
+/*! Native malloc
+ *  \param ctx Duktape context to run function in
+ *  \return `duk_ret_t` return type
+ */
+static duk_ret_t native_malloc(duk_context*ctx){
+	duk_push_pointer(ctx,(void*)malloc((size_t)duk_get_number(ctx,0)));
+	return 1;
+}
+/*! Native free
+ *  \param ctx Duktape context to run function in
+ *  \return `duk_ret_t` return type
+ */
+static duk_ret_t native_free(duk_context*ctx){
+	free(duk_get_pointer(ctx,0));
+	return 0;
+}
+/*! Native printf
+ *  \param ctx Duktape context to run function in
+ *  \return `duk_ret_t` return type
+ */
+static duk_ret_t native_printf(duk_context*ctx){
+	//partially implemented, todo, handle varargs somehow
+	duk_ret_t ret=0;
+	if(duk_is_undefined(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_null(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_boolean(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_number(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_number(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_nan(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_string(ctx,0)){
+		duk_push_int(ctx,printf(duk_get_string(ctx,0)));
+		ret=1;
+	}else if(duk_is_object(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_buffer(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_buffer_data(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_pointer(ctx,0)){
+		duk_push_int(ctx,printf((char*)duk_get_pointer(ctx,0)));
+		ret=1;
+	}else if(duk_is_lightfunc(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_symbol(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_array(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_function(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_c_function(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_ecmascript_function(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_bound_function(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_thread(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_callable(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_constructable(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_dynamic_buffer(ctx,0)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,0,&sz);
+		duk_push_int(ctx,printf((char*)ptr));
+		ret=1;
+	}else if(duk_is_fixed_buffer(ctx,0)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,0,&sz);
+		duk_push_int(ctx,printf((char*)ptr));
+		ret=1;
+	}else if(duk_is_external_buffer(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_primitive(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_object_coercible(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_error(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_eval_error(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_range_error(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_reference_error(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_syntax_error(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_type_error(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else if(duk_is_uri_error(ctx,0)){
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}else{
+		fprintf(stderr,"error:native_printf:unsupported type\n");
+	}
+	return ret;
+}
+static duk_ret_t native_fprintf(duk_context*ctx){
+	//partially implemented, todo, handle varargs somehow
+	duk_ret_t ret=0;
+	FILE*fp=(FILE*)duk_get_pointer(ctx,0);
+	if(duk_is_undefined(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_null(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_boolean(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_number(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_number(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_nan(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_string(ctx,1)){
+		duk_push_int(ctx,fprintf(fp,duk_get_string(ctx,1)));
+		ret=1;
+	}else if(duk_is_object(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_buffer(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_buffer_data(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_pointer(ctx,1)){
+		duk_push_int(ctx,fprintf(fp,(char*)duk_get_pointer(ctx,1)));
+		ret=1;
+	}else if(duk_is_lightfunc(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_symbol(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_array(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_function(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_c_function(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_ecmascript_function(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_bound_function(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_thread(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_callable(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_constructable(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_dynamic_buffer(ctx,1)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,1,&sz);
+		duk_push_int(ctx,fprintf(fp,(char*)ptr));
+		ret=1;
+	}else if(duk_is_fixed_buffer(ctx,1)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,1,&sz);
+		duk_push_int(ctx,fprintf(fp,(char*)ptr));
+		ret=1;
+	}else if(duk_is_external_buffer(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_primitive(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_object_coercible(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_error(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_eval_error(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_range_error(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_reference_error(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_syntax_error(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_type_error(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else if(duk_is_uri_error(ctx,1)){
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}else{
+		fprintf(stderr,"error:native_fprintf:unsupported type\n");
+	}
+	return ret;
+}
+static duk_ret_t native_sprintf(duk_context*ctx){
+	//partially implemented, todo, handle varargs somehow
+	duk_ret_t ret=0;
+	char*s=(char*)duk_get_pointer(ctx,0);
+	if(duk_is_undefined(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_null(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_boolean(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_number(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_number(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_nan(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_string(ctx,1)){
+		duk_push_int(ctx,sprintf(s,duk_get_string(ctx,1)));
+		ret=1;
+	}else if(duk_is_object(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_buffer(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_buffer_data(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_pointer(ctx,1)){
+		duk_push_int(ctx,sprintf(s,(char*)duk_get_pointer(ctx,1)));
+		ret=1;
+	}else if(duk_is_lightfunc(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_symbol(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_array(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_function(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_c_function(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_ecmascript_function(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_bound_function(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_thread(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_callable(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_constructable(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_dynamic_buffer(ctx,1)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,1,&sz);
+		duk_push_int(ctx,sprintf(s,(char*)ptr));
+		ret=1;
+	}else if(duk_is_fixed_buffer(ctx,1)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,1,&sz);
+		duk_push_int(ctx,sprintf(s,(char*)ptr));
+		ret=1;
+	}else if(duk_is_external_buffer(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_primitive(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_object_coercible(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_error(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_eval_error(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_range_error(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_reference_error(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_syntax_error(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_type_error(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else if(duk_is_uri_error(ctx,1)){
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}else{
+		fprintf(stderr,"error:native_sprintf:unsupported type\n");
+	}
+	return ret;
+}
+static duk_ret_t native_snprintf(duk_context*ctx){
+	//partially implemented, todo, handle varargs somehow
+	duk_ret_t ret=0;
+	char*s=(char*)duk_get_pointer(ctx,0);
+	size_t l=(size_t)duk_get_number(ctx,1);
+	if(duk_is_undefined(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_null(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_boolean(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_number(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_number(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_nan(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_string(ctx,3)){
+		duk_push_int(ctx,snprintf(s,l,duk_get_string(ctx,3)));
+		ret=1;
+	}else if(duk_is_object(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_buffer(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_buffer_data(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_pointer(ctx,3)){
+		duk_push_int(ctx,snprintf(s,l,(char*)duk_get_pointer(ctx,3)));
+		ret=1;
+	}else if(duk_is_lightfunc(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_symbol(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_array(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_function(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_c_function(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_ecmascript_function(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_bound_function(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_thread(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_callable(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_constructable(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_dynamic_buffer(ctx,3)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,3,&sz);
+		duk_push_int(ctx,snprintf(s,l,(char*)ptr));
+		ret=1;
+	}else if(duk_is_fixed_buffer(ctx,3)){
+		duk_size_t sz;
+		void*ptr=duk_require_buffer_data(ctx,3,&sz);
+		duk_push_int(ctx,snprintf(s,l,(char*)ptr));
+		ret=1;
+	}else if(duk_is_external_buffer(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_primitive(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_object_coercible(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_error(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_eval_error(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_range_error(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_reference_error(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_syntax_error(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_type_error(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else if(duk_is_uri_error(ctx,3)){
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}else{
+		fprintf(stderr,"error:native_snprintf:unsupported type\n");
+	}
+	return ret;
+}
+
+
 //---------------------------
 /*! Register native function on context
  *  \return `duk_ret_t` return type
@@ -584,5 +938,19 @@ void duk_register_libc(duk_context*ctx){
 	duk_put_global_string(ctx,"closedir");
 	duk_push_c_function(ctx,native_dirent2json,1);
 	duk_put_global_string(ctx,"dirent2json");
+	//----------------------------------------
+	duk_push_c_function(ctx,native_malloc,1);
+	duk_put_global_string(ctx,"malloc");
+	duk_push_c_function(ctx,native_free,1);
+	duk_put_global_string(ctx,"free");
+	//----------------------------------------
+	duk_push_c_function(ctx,native_printf,1);
+	duk_put_global_string(ctx,"printf");
+	duk_push_c_function(ctx,native_fprintf,2);
+	duk_put_global_string(ctx,"fprintf");
+	duk_push_c_function(ctx,native_sprintf,2);
+	duk_put_global_string(ctx,"sprintf");
+	duk_push_c_function(ctx,native_snprintf,3);
+	duk_put_global_string(ctx,"snprintf");
 	//----------------------------------------
 }

@@ -1,0 +1,11 @@
+CC=bcc
+SRC=.\src\main.c
+BINDIR=.\bin
+BINNAM=a
+BINEXT=exe
+BIN=$(BINDIR)\$(BINNAM).$(BINEXT)
+all: $(BIN)
+$(BIN): $(SRC)
+	$(BCC) -n$(BINDIR) -e$(BINNAM) $(SRC)
+clean:
+	erase $(BINDIR)\*.*

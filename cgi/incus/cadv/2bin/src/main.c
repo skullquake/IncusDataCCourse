@@ -10,7 +10,7 @@ int main(int argc,char**argv,char**envp){
 	argc=argc;
 	argv=argv;
 	envp=envp;
-	printf("Content-Type: text/plain\r\n\r\n");
+	printf("Content-Type: text/plain\n\n");
 	signed char    sc= 0;
 	unsigned char  uc= 1;
 	signed short   ss=-1;

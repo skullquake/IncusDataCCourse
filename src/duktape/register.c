@@ -12,6 +12,9 @@
 #include"duktape/duk_module_duktape.h"
 #include"duktape/sqlite.h"
 #include"duktape/libc.h"
+#ifdef DUK_USE_CURL
+#include"duktape/curl.h"
+#endif
 #include<dirent.h>
 #include<sys/stat.h>
 #define PATH_MAX_STRING_SIZE 256
@@ -303,6 +306,9 @@ void duk_register(duk_context*ctx){
 	duk_register_sqlite(ctx);
 	duk_register_log(ctx);
 	duk_register_libc(ctx);
+#ifdef DUK_USE_CURL
+	duk_register_curl(ctx);
+#endif
 	//----------------------------------------
 	duk_push_c_function(ctx,native_mkdir_p,2);
 	duk_put_global_string(ctx,"mkdir_p");

@@ -9,7 +9,7 @@ int sum2d (int parm[][3], int rows);
  * \param envp environment vector, for cgi (not used here)
  */
 int main(int argc,char* argv[],char**envp){
-	printf("Content-Type: text/plain\r\n\r\n");
+	printf("Content-Type: text/plain\n\n");
 		//---------------------------------
 		//take special note of the types!!!
 		//---------------------------------

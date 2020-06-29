@@ -29,6 +29,18 @@ todo:
 	* js startup [re]configuration script and shutdown script: handler contexts inherits from main context
           in terms of script engine initialization
 	* multiport spinups, exposed in scripting language on threads
+	* source tree to support multiple concurrent bin directories, e.g. you have the same folder open on wsl and windows cmd building with wsl gcc and nuwen gcc
+          for now supported ./bin/linux and ./bin/windows, which will have all the objects for the specific build and the binary
+          the makefile will use the appropriate binary with run/serve, e.g. ./bin/linux/a.out or ./bin/windows/a.exe, depending on the
+          host environment
+        * WIN32/LINUX cgi interpreter compile time determination, also take a look
+          at mongoose config files, and rather set one up for windows and linux, then
+          do a compile time file select
+	* curl: this is partially implemented (./src/duktape/curl.h/c). The curl source code needs to be incorporated in the source tree
+	* duk registration of native functions to be controlled with flags, e.g. there is one now, -DDUK_USE_CURL, which should probably be -DDUK_REGISTER_CURL
+	  alternatively, these can be registered in the scripting environment, so you have a function exposed e.g. duk_register("CURL"), or something like that
+	  this will also be a good excercise in trying to find out how to "unregister" functions, which will probably be easier if everything
+	  is namespaced in the scripting engine, e.g. libc.printf...libc.fwrite   ...   curl.foo...curl.bar  ...  etc.
 
 Extra Topics/Tools to Learn/Try out:
 	* CMake (example given)
@@ -50,3 +62,7 @@ Extra Topics/Tools to Learn/Try out:
 
 Compilation Notes:
 	* std-c99 breaks ctemplate - debug width gdb whats going on here
+	* with cgi scripts, for the header, with the \r\n, on windows, an extra
+	  \r will be inserted with \n, so it will become \r\r\n\r\r\n,
+	  when creating cgi programs in c, just use \n, as this seems portable
+	  on both linux and windows

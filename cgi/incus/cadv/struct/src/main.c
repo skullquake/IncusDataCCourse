@@ -16,8 +16,7 @@ ST f0(ST s){
 	return s;
 }
 int main(int argc,char**argv,char**envp){
-	printf("Content-type: text/plain\r\n");
-	printf("\r\n");
+	printf("Content-type: text/plain\n\n");
 	{
 		ST s={0,1.2,"3.45"};
 	}
