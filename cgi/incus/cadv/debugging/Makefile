@@ -241,6 +241,18 @@ clean:
 	$(RMDIR) $(_BINDIR)
 #$(SILENT)
 #-------------------------------------------------------------------------------
+ifeq (test,$(firstword $(MAKECMDGOALS)))
+  TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(TEST_ARGS):;@:)
+endif
 .phony:test
 test:
-	$(call FNTOUCH,Makefile)
+	-@$(CC)\
+		-DDEBUG\
+		$(CFLAGS)\
+		$(TEST_ARGS)\
+		$(LDFLAGS)\
+		-o tmp.exe
+	-@tmp.exe
+	-@$(RM) tmp.exe
+#-------------------------------------------------------------------------------

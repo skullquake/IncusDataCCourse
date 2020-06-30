@@ -12,6 +12,7 @@ main (int argc, char **argv, char **envp)
   argv = argv;
   envp = envp;
   printf ("Content-Type: text/plain\n\n");
-  foo();
+  printf("%d\n",myadd(1,1));
+  printf("%d\n",myadd(1,2));
   return EXIT_SUCCESS;
 }
