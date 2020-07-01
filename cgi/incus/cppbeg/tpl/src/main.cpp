@@ -8,5 +8,8 @@ extern "C" {
 }
 int main(int argc,char**argv){
 	std::cout<<"Content-Type: text/plain"<<std::endl<<std::endl;
+	#ifdef __cplusplus
+		std::cout<<"CPP"<<std::endl;
+	#endif
 	return 0;
 }
