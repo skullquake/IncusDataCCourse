@@ -15,6 +15,9 @@
 #ifdef DUK_USE_CURL
 #include"duktape/curl.h"
 #endif
+#ifdef DUK_USE_CACA
+#include"duktape/caca.h"
+#endif
 #include<dirent.h>
 #include<sys/stat.h>
 #define PATH_MAX_STRING_SIZE 256
@@ -308,6 +311,9 @@ void duk_register(duk_context*ctx){
 	duk_register_libc(ctx);
 #ifdef DUK_USE_CURL
 	duk_register_curl(ctx);
+#endif
+#ifdef DUK_USE_CACA
+	duk_register_caca(ctx);
 #endif
 	//----------------------------------------
 	duk_push_c_function(ctx,native_mkdir_p,2);

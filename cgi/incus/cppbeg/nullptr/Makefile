@@ -13,7 +13,7 @@ ifeq ($(OS),Windows_NT)
         THEOS := $(patsubst MINGW64%,MINGW,$(THEOS))
         THEOS := $(patsubst MINGW%,MINGW64,$(THEOS))
     endif
-    EXT := .exe
+    EXT := .cgi
 else
     UNAME_S := $(shell uname -s)
     THEOS := $(UNAME_S)
@@ -24,7 +24,7 @@ else
     ifneq ($(filter arm%,$(UNAME_P)),)
         THEOS=ARM
     endif
-    EXT := .out
+    EXT := .cgi
 endif
 #-------------------------------------------------------------------------------
 #PROCESSOR DETECTION
@@ -61,13 +61,17 @@ CFLAGS=\
 	-std=c99\
 	-I./src\
 	-I./src/sqlite
+CXXFLAGS=\
+	-Wall\
+	-Wextra\
+	-Wpedantic\
+	-I./src
 LDFLAGS=
 ifeq ($(THEOS),Windows)
 	SILENT=> NUL 2>&1
  	LDFLAGS+=-lwsock32
 	LDFLAGS+=-lws2_32
 	CFLAGS-=-DDUK_USE_CURL
-	CFLAGS-=-DDUK_USE_CACA
 	BINDIR=./bin/windows/
 else
 	LDFLAGS+=-lpthread
@@ -75,9 +79,6 @@ else
 	LDFLAGS+=-ldl
 	LDFLAGS+=-lcurl
 	CFLAGS+=-DDUK_USE_CURL
-	CFLAGS+=-DDUK_USE_CACA
-	LDFLAGS+=`pkg-config --libs 'caca'` -lm
-	CFLAGS+=-I./inc `pkg-config --cflags 'caca'`
 	BINDIR=./bin/linux/
 endif
 #-------------------------------------------------------------------------------
@@ -126,6 +127,18 @@ else
 	CP=cp -r
 endif
 #-------------------------------------------------------------------------------
+#TOUCH
+#-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+define FNTOUCH
+$(shell (for %%a in ($(1)) do if exist "%%~a" (pushd "%%~dpa" && ( copy /b "%%~nxa"+,, & popd )) else (type nul > "%%~fa")) >nul 2>&1)
+endef
+else
+define FNTOUCH
+touch $(1)
+endef
+endif
+#-------------------------------------------------------------------------------
 #PATH SEPERATORS
 #-------------------------------------------------------------------------------
 PATHSEPSTRIPPED=$(patsubst %\,%,$(PATHSEP))
@@ -156,13 +169,13 @@ else
 endif
 
 #-------------------------------------------------------------------------------
-#_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /s /m *.c /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo %%~F)
 ifeq ($(THEOS),Windows)
-	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
+	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
 else
-	_SRC:=$(shell find $(SRCDIR) -name '*.c')
+	_SRC:=$(shell find $(SRCDIR) -name '*.c*')
 endif
-OBJS:=$(addprefix $(_BINDIR),$(_SRC:%.c=%.o))
+#OBJS:=$(addprefix $(_BINDIR),$(_SRC:%.c=%.o))
+OBJS=$(addprefix $(_BINDIR),$(patsubst %.c,%.o ,$(patsubst %.cpp,%.o,$(_SRC))))
 ifeq ($(THEOS),Windows)
 	_OBJS=$(subst /,$(PATHSEPSTRIPPED),$(OBJS))
 else
@@ -179,6 +192,7 @@ all:$(_BIN)
 #-------------------------------------------------------------------------------
 run:$(_BIN)
 	@$(_BIN) $(RUN_ARGS) 
+#-------------------------------------------------------------------------------
 serve:$(_BIN)
 	@$(_BIN)\
 		--serve\
@@ -187,7 +201,7 @@ serve:$(_BIN)
 #-------------------------------------------------------------------------------
 $(_BIN):$(_OBJS)
 	@echo "generating $@..."
-	@$(CC) \
+	@$(CXX) \
 		$(_OBJS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
@@ -195,18 +209,36 @@ $(_BIN):$(_OBJS)
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
+#		-x c
 	@$(CC)\
 		$(CFLAGS)\
+		-c $<\
+		-o $@
+$(_BINDIR)\%.o: %.cpp
+	@echo "generating $@..."
+	@-$(MKDIR) $(@D) $(SILENT)
+	@$(CXX)\
+		$(CXXFLAGS)\
 		-c $<\
 		-o $@
 # --- kludge ... sort out ---
 $(_BINDIR)%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
+#		-x c
 	@$(CC)\
 		$(CFLAGS)\
 		-c $<\
 		-o $@
+
+$(_BINDIR)%.o: %.cpp
+	@echo "generating $@..."
+	@-$(MKDIR) $(@D) $(SILENT)
+	@$(CXX)\
+		$(CXXFLAGS)\
+		-c $<\
+		-o $@
+
 #-------------------------------------------------------------------------------
 define dump
 objdump $(1) -t
@@ -215,8 +247,10 @@ dumpall:\
 	$(_OBJS)
 	$(foreach obj,$(_OBJS),$(call dump,$(obj)))
 #-------------------------------------------------------------------------------
-prettify:$(_SRC)
-	echo $(INDENT) $(_SRC)
+pretty:$(_SRC)
+	$(INDENT) $(_SRC)
+	make -t
+#$(call FNTOUCH,Makefile)
 #-------------------------------------------------------------------------------
 doc:\
 	$(SRC) \
@@ -229,11 +263,25 @@ doc:\
 .phony:test
 #-------------------------------------------------------------------------------
 clean:
-	$(RMDIR) $(_BINDIR)
+	@-$(RMDIR) $(_BINDIR)
+	@-$(RMDIR) doc
 #$(SILENT)
 #-------------------------------------------------------------------------------
+ifeq (test,$(firstword $(MAKECMDGOALS)))
+  TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(TEST_ARGS):;@:)
+endif
+.phony:test
 test:
-	echo $(SRC)
-	echo $(_SRC)
-	echo $(OBJS)
-	echo $(_OBJS)
+	-@$(CC)\
+		-DDEBUG\
+		$(CFLAGS)\
+		$(TEST_ARGS)\
+		$(LDFLAGS)\
+		-o tmp.exe
+	-@tmp.exe
+	-@$(RM) tmp.exe
+test2:
+	@echo SRC:
+	@echo $(_SRC)
+#-------------------------------------------------------------------------------

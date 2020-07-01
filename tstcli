@@ -1,2 +1,2 @@
 #!/bin/bash
-./bin/a.out --run ./scr/cli/main.js
+./bin/linux/a.out --run ./scr/cli/main.js

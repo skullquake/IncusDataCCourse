@@ -64,6 +64,7 @@ Extra Topics/Tools to Learn/Try out:
 	* add uuid makefile phony target for these header guards
 	* add pretty target, to prettify code, only code that has changed, there is a basic example in cgi/incus/cadv/debugging/Makefile
 	* create TOUCH makefile function, as windows has no touch, there is a basic one at cgi/incus/cadv/debugging/Makefile
+	* create lib[n]curses and libcaca bindings
 
 Compilation Notes:
 	* std-c99 breaks ctemplate - debug width gdb whats going on here

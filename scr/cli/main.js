@@ -14,7 +14,7 @@ load('./scr/lib/fsutils.js');
  */
 function main(){
 	log('Info: main(): start');
-	//rawtest();
+	caca_test();////rawtest();
 	log('Info: main(): end');
 	return 0;
 }
