@@ -4,6 +4,8 @@
  *         of expressions, so you can't use something like a cout or non-`constexpr`
  *         function call,
  *         its mainly to increase performance
+ *         `constexrp` should also be used instead of symbolic constants defined using
+ *         the prepcossor in C++
  *         `constexpr` can be used for variables, functions, and objects
  *         references:
  *             https://www.educative.io/edpresso/what-is-the-constexpr-keyword-in-cpp

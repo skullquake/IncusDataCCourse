@@ -1,2 +1,2 @@
 #!/bin/env bash
-printf "_"&&uuid|tr -s "-" "_"
+printf "H"&&uuid|tr -d '-'|tr -s '[:lower:]' '[:upper:]'
