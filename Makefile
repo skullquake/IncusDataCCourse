@@ -60,24 +60,29 @@ CFLAGS=\
 	-Wpedantic\
 	-std=c99\
 	-I./src\
-	-I./src/sqlite
+	-I./src/sqlite\
+	-I./src/caca
 LDFLAGS=
 ifeq ($(THEOS),Windows)
 	SILENT=> NUL 2>&1
+	LDFLAGS+=-lcaca 
  	LDFLAGS+=-lwsock32
 	LDFLAGS+=-lws2_32
 	CFLAGS-=-DDUK_USE_CURL
 	CFLAGS-=-DDUK_USE_CACA
+	CFLAGS+=-I/opt/gcc/17.1/MinGW/include
+	CFLAGS+=-L/opt/gcc/17.1/MinGW/lib
 	BINDIR=./bin/windows/
 else
 	LDFLAGS+=-lpthread
 	LDFLAGS+=-lm
 	LDFLAGS+=-ldl
 	LDFLAGS+=-lcurl
+	LDFLAGS+=-lcaca 
 	CFLAGS+=-DDUK_USE_CURL
 	CFLAGS+=-DDUK_USE_CACA
-	LDFLAGS+=`pkg-config --libs 'caca'` -lm
-	CFLAGS+=-I./inc `pkg-config --cflags 'caca'`
+#	LDFLAGS+=`pkg-config --libs 'caca'` -lm
+#	CFLAGS+=-I./inc `pkg-config --cflags 'caca'`
 	BINDIR=./bin/linux/
 endif
 #-------------------------------------------------------------------------------

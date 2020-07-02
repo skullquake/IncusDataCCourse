@@ -72,3 +72,7 @@ Compilation Notes:
 	  \r will be inserted with \n, so it will become \r\r\n\r\r\n,
 	  when creating cgi programs in c, just use \n, as this seems portable
 	  on both linux and windows
+
+Prerequisites:
+	* Windows: NUWEN
+	* Linux: pkg-config, libcurl-dev
