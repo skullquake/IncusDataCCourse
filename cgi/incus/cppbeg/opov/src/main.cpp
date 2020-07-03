@@ -6,6 +6,9 @@
  *         functions or not to use friend functions. If friend functions are
  *         not used, you have to implemente mutators and accessors for private
  *         members to be accessed or changed in the overloaded operation
+ *
+ *         Another operator you can overload is the casting operator,
+ *         and we also illustrate that below
  */
 #include<iostream>
 #include<sstream>
@@ -20,6 +23,7 @@ namespace{
 	}S0;
 	extern std::ostream&operator<<(std::ostream&os,const S0&s0);
 	extern std::istream&operator>>(std::istream&is,S0&s0);
+	//todo:cast operator overload
 	class C0{
 		public:
 			C0()=default;
