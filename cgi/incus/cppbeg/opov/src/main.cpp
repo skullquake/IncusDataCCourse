@@ -32,6 +32,8 @@ namespace{
 			int getmb()const;
 			void setma(int pa);
 			void setmb(int pb);
+			//example cast overload
+			operator double(){return static_cast<double>(ma)/static_cast<double>(mb);};
 		private:
 			int ma;
 			int mb;
@@ -44,9 +46,19 @@ namespace{
 			C1(int pa,int pb);
 			friend std::ostream&operator<<(std::ostream&os,const C1&c);
 			friend std::istream&operator>>(std::istream&is,C1&c1);
+			//example cast overload
+			operator double(){return static_cast<double>(ma)/static_cast<double>(mb);};
 		private:
 			int ma;
 			int mb;
+	};
+	class C2{
+		public:
+			C2()=default;
+			C2(int pa):ma(pa){};
+			friend std::ostream&operator<<(std::ostream&os,const C2&c2);
+		private:
+			int ma;
 	};
 }
 int main(int argc,char**argv){
@@ -96,6 +108,18 @@ int main(int argc,char**argv){
 		iss>>c1;
 		std::cout<<c1<<std::endl;
 	}
+	{//overloaded casting operator
+		std::cout<<"test6"<<std::endl;
+		C1 c1;
+		std::cout<<static_cast<double>(c1)<<std::endl;;
+	}
+	{//???
+		std::cout<<"test7"<<std::endl;
+		C2 c2;
+		c2=(C2)42;
+		std::cout<<c2<<std::endl;
+	}
+
 	return 0;
 }
 namespace{
@@ -135,5 +159,9 @@ namespace{
 		is>>c1.ma;
 		is>>c1.mb;
 		return is;
+	}
+	std::ostream&operator<<(std::ostream&os,const C2&c2){
+		os<<c2.ma;
+		return os;
 	}
 }
