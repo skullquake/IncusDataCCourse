@@ -18,6 +18,9 @@
 #ifdef DUK_USE_CACA
 #include"duktape/caca.h"
 #endif
+#ifdef DUK_USE_NCURSES
+#include"duktape/ncurses.h"
+#endif
 #include<dirent.h>
 #include<sys/stat.h>
 #define PATH_MAX_STRING_SIZE 256
@@ -314,6 +317,9 @@ void duk_register(duk_context*ctx){
 #endif
 #ifdef DUK_USE_CACA
 	duk_register_caca(ctx);
+#endif
+#ifdef DUK_USE_CACA
+	duk_register_ncurses(ctx);
 #endif
 	//----------------------------------------
 	duk_push_c_function(ctx,native_mkdir_p,2);

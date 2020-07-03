@@ -14,9 +14,31 @@ load('./scr/lib/fsutils.js');
  */
 function main(){
 	log('Info: main(): start');
-	jstestcaca();
+	jstestncurses();
 	log('Info: main(): end');
 	return 0;
+}
+function jstestncurses(){
+	log("info:jstestncurses:start");
+	initscr();
+	raw();
+	cbreak();
+	noecho();
+	curs_set(0);
+	var i=0;
+	for(var i=0;i<8192*16;i++){
+		//printw("hello");
+		var x=Math.floor(Math.random()*10)+1
+		var y=Math.floor(Math.random()*32)+1
+		mvprintw(x,y,Math.random()<0.5?".":" ");
+		mvprintw(0,0,"I:"+i);
+		refresh();
+	}
+	//wprintw(stdscr,"lorem");//err
+	a=getch();
+	log(a);
+	endwin();
+	log("info:jstestncurses:end");
 }
 function jstestcaca(){
 	var dp=caca_create_display();

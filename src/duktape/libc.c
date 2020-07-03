@@ -838,7 +838,6 @@ static duk_ret_t native_snprintf(duk_context*ctx){
 	return ret;
 }
 
-
 //---------------------------
 /*! Register native function on context
  *  \return `duk_ret_t` return type
