@@ -62,13 +62,6 @@ CFLAGS=\
 	-I./src\
 	-I./src/sqlite\
 	-I./src/caca
-CXXFLAGS=\
-	-Wall\
-	-Wextra\
-	-Wpedantic\
-	-I./src\
-	-I./src/sqlite\
-	-I./src/caca
 LDFLAGS=
 ifeq ($(THEOS),Windows)
 	SILENT=> NUL 2>&1
@@ -79,7 +72,7 @@ ifeq ($(THEOS),Windows)
 	CFLAGS-=-DDUK_USE_CACA
 	CFLAGS-=-DDUK_USE_NCURSES
 	CFLAGS-=-DDUK_USE_PTHREAD
-	CFLAGS-=-DDUK_USE_DUKGLUE
+	CFLAGS-=-DDUK_USE_DUKGLUETEST
 	CFLAGS+=-I/opt/gcc/17.1/MinGW/include
 	CFLAGS+=-L/opt/gcc/17.1/MinGW/lib
 	BINDIR=./bin/windows/
@@ -94,8 +87,9 @@ else
 	LDFLAGS+=-lncurses
 	CFLAGS+=-DDUK_USE_PTHREAD
 	LDFLAGS+=-lpthread
-	CXXFLAGS+=-DDUK_USE_DUKGLUE
-	CFLAGS+=-DDUK_USE_DUKGLUE
+	CFLAGS+=-DDUK_USE_DUKGLUETEST
+#	LDFLAGS+=`pkg-config --libs 'caca'` -lm
+#	CFLAGS+=-I./inc `pkg-config --cflags 'caca'`
 	BINDIR=./bin/linux/
 endif
 #-------------------------------------------------------------------------------
@@ -174,20 +168,19 @@ else
 endif
 
 #-------------------------------------------------------------------------------
+#_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /s /m *.c /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo %%~F)
 ifeq ($(THEOS),Windows)
-	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
+	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
 else
-	_SRC:=$(shell find $(SRCDIR) -type f \( -iname \*.c -o -iname \*.cpp \))
-#	_SRC:=$(shell find $(SRCDIR) -name '*.c*')
+	_SRC:=$(shell find $(SRCDIR) -name '*.c')
 endif
-OBJS=$(addprefix $(_BINDIR),$(patsubst %.c,%.o ,$(patsubst %.cpp,%.o,$(_SRC))))
+OBJS:=$(addprefix $(_BINDIR),$(_SRC:%.c=%.o))
 ifeq ($(THEOS),Windows)
 	_OBJS=$(subst /,$(PATHSEPSTRIPPED),$(OBJS))
 else
 	_OBJS=$(OBJS)
 endif
 _BIN=$(_BINDIR)a$(EXT)
-
 #-------------------------------------------------------------------------------
 ifeq (run,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -206,42 +199,24 @@ serve:$(_BIN)
 #-------------------------------------------------------------------------------
 $(_BIN):$(_OBJS)
 	@echo "generating $@..."
-	@$(CXX) \
+	@$(CC) \
 		$(_OBJS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
-
 #-------------------------------------------------------------------------------
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-#		-x c
 	@$(CC)\
 		$(CFLAGS)\
-		-c $<\
-		-o $@
-$(_BINDIR)\%.o: %.cpp
-	@echo "generating $@..."
-	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CXX)\
-		$(CXXFLAGS)\
 		-c $<\
 		-o $@
 # --- kludge ... sort out ---
 $(_BINDIR)%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-#		-x c
 	@$(CC)\
 		$(CFLAGS)\
-		-c $<\
-		-o $@
-
-$(_BINDIR)%.o: %.cpp
-	@echo "generating $@..."
-	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CXX)\
-		$(CXXFLAGS)\
 		-c $<\
 		-o $@
 #-------------------------------------------------------------------------------
@@ -274,3 +249,8 @@ test:
 	echo $(_SRC)
 	echo $(OBJS)
 	echo $(_OBJS)
+
+
+
+
+

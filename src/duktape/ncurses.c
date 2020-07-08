@@ -108,8 +108,8 @@ static duk_ret_t native_typeahead(duk_context*ctx){
 //--------------------------------------------------------------------------------
 //extern NCURSES_EXPORT(WINDOW *) initscr (void);
 static duk_ret_t native_initscr(duk_context*ctx){
-	initscr();
-	return 0;
+	duk_push_pointer(ctx,initscr());
+	return 1;
 }
 //extern NCURSES_EXPORT(int) endwin (void);
 static duk_ret_t native_endwin(duk_context*ctx){
@@ -210,6 +210,212 @@ static duk_ret_t native_vw_printw(duk_context*ctx){
 	return 1;
 }
 #endif
+//extern NCURSES_EXPORT(int) addch (const chtype);
+static duk_ret_t native_addch(duk_context*ctx){
+	duk_push_int(ctx,addch((chtype)duk_get_int(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) waddch (WINDOW *, const chtype);
+static duk_ret_t native_waddch(duk_context*ctx){
+	duk_push_int(ctx,waddch((WINDOW*)duk_get_pointer(ctx,0),(chtype)duk_get_int(ctx,1)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) mvaddch (int, int, const chtype);
+static duk_ret_t native_mvaddch(duk_context*ctx){
+	duk_push_int(ctx,mvaddch(duk_get_int(ctx,0),duk_get_int(ctx,1),(chtype)duk_get_int(ctx,2)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) mvwaddch (WINDOW *, int, int, const chtype);
+static duk_ret_t native_mvwaddch(duk_context*ctx){
+	duk_push_int(ctx,mvwaddch((WINDOW*)duk_get_pointer(ctx,0),duk_get_int(ctx,1),duk_get_int(ctx,2),(chtype)duk_get_int(ctx,3)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) getmaxx (const WINDOW *);
+static duk_ret_t native_getmaxx(duk_context*ctx){
+	duk_push_int(ctx,getmaxx((const WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) getmaxy (const WINDOW *);
+static duk_ret_t native_getmaxy(duk_context*ctx){
+	duk_push_int(ctx,getmaxy((const WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) getcurx (const WINDOW *);
+static duk_ret_t native_getcurx(duk_context*ctx){
+	duk_push_int(ctx,getcurx((const WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) getcury (const WINDOW *);
+static duk_ret_t native_getcury(duk_context*ctx){
+	duk_push_int(ctx,getcury((const WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) getbegx (const WINDOW *);
+static duk_ret_t native_getbegx(duk_context*ctx){
+	duk_push_int(ctx,getbegx((const WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) getbegy (const WINDOW *);
+static duk_ret_t native_getbegy(duk_context*ctx){
+	duk_push_int(ctx,getbegy((const WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) addstr (const char *);
+static duk_ret_t native_addstr(duk_context*ctx){
+	duk_push_int(ctx,addstr(duk_get_string(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) mvaddstr (int, int, const char *);
+static duk_ret_t native_mvaddstr(duk_context*ctx){
+	duk_push_int(ctx,mvaddstr(duk_get_int(ctx,0),duk_get_int(ctx,1),duk_get_string(ctx,2)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) mvwaddstr (WINDOW *, int, int, const char *);
+static duk_ret_t native_mvwaddstr(duk_context*ctx){
+	duk_push_int(ctx,mvwaddstr((WINDOW*)duk_get_pointer(ctx,0),duk_get_int(ctx,1),duk_get_int(ctx,2),duk_get_string(ctx,3)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) waddstr (WINDOW *,const char *);
+static duk_ret_t native_waddstr(duk_context*ctx){
+	duk_push_int(ctx,waddstr((WINDOW*)duk_get_pointer(ctx,0),duk_get_string(ctx,1)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) getstr (char *);
+static duk_ret_t native_getstr(duk_context*ctx){
+	//maxlen???
+	char buf[80];
+	if(!getstr(buf)){
+		duk_push_string(ctx,buf);
+	}else{
+		duk_push_null(ctx);
+	}
+	return 1;
+}
+//extern NCURSES_EXPORT(int) wgetstr (WINDOW *, char *);
+static duk_ret_t native_wgetstr(duk_context*ctx){
+	//maxlen???
+	char buf[80];
+	if(!wgetstr((WINDOW*)duk_get_pointer(ctx,0),buf)){
+		duk_push_string(ctx,buf);
+	}else{
+		duk_push_null(ctx);
+	}
+	return 1;
+}
+//extern NCURSES_EXPORT(int) mvwgetstr (WINDOW *, int, int, char *);
+static duk_ret_t native_mvwgetstr(duk_context*ctx){
+	//maxlen???
+	char buf[80];
+	if(!mvwgetstr((WINDOW*)duk_get_pointer(ctx,0),duk_get_int(ctx,1),duk_get_int(ctx,2),buf)){
+		duk_push_string(ctx,buf);
+	}else{
+		duk_push_null(ctx);
+	}
+	return 1;
+
+}
+//extern NCURSES_EXPORT(int) clear (void);
+static duk_ret_t native_clear(duk_context*ctx){
+	duk_push_int(ctx,clear());
+	return 1;
+}
+//extern NCURSES_EXPORT(int) wclear (WINDOW *);
+static duk_ret_t native_wclear(duk_context*ctx){
+	duk_push_int(ctx,wclear((WINDOW*)duk_to_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) attroff (NCURSES_ATTR_T);
+static duk_ret_t native_attroff(duk_context*ctx){
+	duk_push_int(ctx,attroff(duk_to_int(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) attron (NCURSES_ATTR_T);
+static duk_ret_t native_attron(duk_context*ctx){
+	duk_push_int(ctx,attron(duk_to_int(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) wattron (WINDOW *, int);
+static duk_ret_t native_wattron(duk_context*ctx){
+	duk_push_int(ctx,wattron((WINDOW*)duk_to_pointer(ctx,0),duk_to_int(ctx,1)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) wattroff (WINDOW *, int);
+static duk_ret_t native_wattroff(duk_context*ctx){
+	duk_push_int(ctx,wattroff((WINDOW*)duk_to_pointer(ctx,0),duk_to_int(ctx,1)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) attrset (NCURSES_ATTR_T);
+static duk_ret_t native_attrset(duk_context*ctx){
+	duk_push_int(ctx,attrset(duk_to_int(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) wattrset (WINDOW *, int);
+static duk_ret_t native_wattrset(duk_context*ctx){
+	duk_push_int(ctx,wattrset((WINDOW*)duk_to_pointer(ctx,0),duk_to_int(ctx,1)));
+	return 1;
+}
+//extern NCURSES_EXPORT(WINDOW *) newwin (int,int,int,int);
+static duk_ret_t native_newwin(duk_context*ctx){
+	duk_push_pointer(ctx,newwin(duk_get_int(ctx,0),duk_get_int(ctx,1),duk_get_int(ctx,2),duk_get_int(ctx,3)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) box (WINDOW *, chtype, chtype);
+static duk_ret_t native_box(duk_context*ctx){
+	duk_push_int(ctx,box((WINDOW*)duk_get_pointer(ctx,0),duk_get_int(ctx,1),duk_get_int(ctx,2)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) delwin (WINDOW *);
+static duk_ret_t native_delwin(duk_context*ctx){
+	duk_push_int(ctx,delwin((WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) wborder (WINDOW *,chtype,chtype,chtype,chtype,chtype,chtype,chtype,chtype);
+static duk_ret_t native_wborder(duk_context*ctx){
+	duk_push_int(ctx,wborder(
+		(WINDOW*)duk_get_pointer(ctx,0),
+		duk_get_int(ctx,1),
+		duk_get_int(ctx,2),
+		duk_get_int(ctx,3),
+		duk_get_int(ctx,4),
+		duk_get_int(ctx,5),
+		duk_get_int(ctx,6),
+		duk_get_int(ctx,7),
+		duk_get_int(ctx,8)
+	));
+	return 1;
+}
+/*
+//extern NCURSES_EXPORT(int) wborder_set (WINDOW *,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*);
+static duk_ret_t native_(duk_context*ctx){
+	duk_push_int(ctx,);
+	return 1;
+}
+*/
+//extern NCURSES_EXPORT(int) start_color (void);
+static duk_ret_t native_start_color(duk_context*ctx){
+	duk_push_int(ctx,start_color());
+	return 1;
+}
+//extern NCURSES_EXPORT(int) init_pair (NCURSES_PAIRS_T,NCURSES_COLOR_T,NCURSES_COLOR_T);
+static duk_ret_t native_init_pair(duk_context*ctx){
+	duk_push_int(ctx,init_pair(duk_get_int(ctx,0),duk_get_int(ctx,1),duk_get_int(ctx,2)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) COLOR_PAIR (int);
+static duk_ret_t native_COLOR_PAIR(duk_context*ctx){
+	duk_push_int(ctx,COLOR_PAIR(duk_get_int(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) wclrtoeol (WINDOW *);
+static duk_ret_t native_wclrtoeol(duk_context*ctx){
+	duk_push_int(ctx,wclrtoeol((WINDOW*)duk_get_pointer(ctx,0)));
+	return 1;
+}
+//extern NCURSES_EXPORT(int) clrtoeol (void);
+static duk_ret_t native_clrtoeol(duk_context*ctx){
+	duk_push_int(ctx,clrtoeol());
+	return 1;
+}
 /*! Register native function on context
  *  \return `duk_ret_t` return type
  */
@@ -221,11 +427,65 @@ void duk_register_ncurses(duk_context*ctx){
 	duk_put_global_string(ctx,"bind_zeroblob64");
 #endif
 	//constants
+	duk_push_int(ctx,A_NORMAL);
+	duk_put_global_string(ctx,"A_NORMAL");
+	duk_push_int(ctx,A_ATTRIBUTES);
+	duk_put_global_string(ctx,"A_ATTRIBUTES");
+	duk_push_int(ctx,A_CHARTEXT);
+	duk_put_global_string(ctx,"A_CHARTEXT");
+	duk_push_int(ctx,A_COLOR);
+	duk_put_global_string(ctx,"A_COLOR");
+	duk_push_int(ctx,A_STANDOUT);
+	duk_put_global_string(ctx,"A_STANDOUT");
+	duk_push_int(ctx,A_UNDERLINE);
+	duk_put_global_string(ctx,"A_UNDERLINE");
+	duk_push_int(ctx,A_REVERSE);
+	duk_put_global_string(ctx,"A_REVERSE");
+	duk_push_int(ctx,A_BLINK);
+	duk_put_global_string(ctx,"A_BLINK");
+	duk_push_int(ctx,A_DIM);
+	duk_put_global_string(ctx,"A_DIM");
 	duk_push_int(ctx,A_BOLD);
 	duk_put_global_string(ctx,"A_BOLD");
+	duk_push_int(ctx,A_ALTCHARSET);
+	duk_put_global_string(ctx,"A_ALTCHARSET");
+	duk_push_int(ctx,A_INVIS);
+	duk_put_global_string(ctx,"A_INVIS");
+	duk_push_int(ctx,A_PROTECT);
+	duk_put_global_string(ctx,"A_PROTECT");
+	duk_push_int(ctx,A_HORIZONTAL);
+	duk_put_global_string(ctx,"A_HORIZONTAL");
+	duk_push_int(ctx,A_LEFT);
+	duk_put_global_string(ctx,"A_LEFT");
+	duk_push_int(ctx,A_LOW);
+	duk_put_global_string(ctx,"A_LOW");
+	duk_push_int(ctx,A_RIGHT);
+	duk_put_global_string(ctx,"A_RIGHT");
+	duk_push_int(ctx,A_TOP);
+	duk_put_global_string(ctx,"A_TOP");
+	duk_push_int(ctx,A_VERTICAL);
+	duk_put_global_string(ctx,"A_VERTICAL");
+	duk_push_int(ctx,A_ITALIC);
+	duk_put_global_string(ctx,"A_ITALIC");
+	duk_push_int(ctx,COLOR_BLACK);
+	duk_put_global_string(ctx,"COLOR_BLACK");
+	duk_push_int(ctx,COLOR_RED);
+	duk_put_global_string(ctx,"COLOR_RED");
+	duk_push_int(ctx,COLOR_GREEN);
+	duk_put_global_string(ctx,"COLOR_GREEN");
+	duk_push_int(ctx,COLOR_YELLOW);
+	duk_put_global_string(ctx,"COLOR_YELLOW");
+	duk_push_int(ctx,COLOR_BLUE);
+	duk_put_global_string(ctx,"COLOR_BLUE");
+	duk_push_int(ctx,COLOR_MAGENTA);
+	duk_put_global_string(ctx,"COLOR_MAGENTA");
+	duk_push_int(ctx,COLOR_CYAN);
+	duk_put_global_string(ctx,"COLOR_CYAN");
+	duk_push_int(ctx,COLOR_WHITE);
+	duk_put_global_string(ctx,"COLOR_WHITE");
 	//external variables
-	duk_push_pointer(ctx,stdscr);
-	duk_put_global_string(ctx,stdscr);
+	duk_push_pointer(ctx,(void*)stdscr);
+	duk_put_global_string(ctx,"stdscr");
 	//functions
 	duk_push_c_function(ctx,native_initscr,0);
 	duk_put_global_string(ctx,"initscr");
@@ -305,6 +565,75 @@ void duk_register_ncurses(duk_context*ctx){
 	duk_push_c_function(ctx,native_vw_printw,3);
 	duk_put_global_string(ctx,"vw_printw");
 #endif
+	duk_push_c_function(ctx,native_addch,1);
+	duk_put_global_string(ctx,"addch");
+	duk_push_c_function(ctx,native_waddch,2);
+	duk_put_global_string(ctx,"waddch");
+	duk_push_c_function(ctx,native_mvaddch,3);
+	duk_put_global_string(ctx,"mvaddch");
+	duk_push_c_function(ctx,native_mvwaddch,4);
+	duk_put_global_string(ctx,"mvwaddch");
+	duk_push_c_function(ctx,native_getmaxx,1);
+	duk_put_global_string(ctx,"getmaxx");
+	duk_push_c_function(ctx,native_getmaxy,1);
+	duk_put_global_string(ctx,"getmaxy");
+	duk_push_c_function(ctx,native_getcurx,1);
+	duk_put_global_string(ctx,"getcurx");
+	duk_push_c_function(ctx,native_getcury,1);
+	duk_put_global_string(ctx,"getcury");
+	duk_push_c_function(ctx,native_getbegx,1);
+	duk_put_global_string(ctx,"getbegx");
+	duk_push_c_function(ctx,native_getbegy,1);
+	duk_put_global_string(ctx,"getbegy");
+	duk_push_c_function(ctx,native_addstr,1);
+	duk_put_global_string(ctx,"addstr");
+	duk_push_c_function(ctx,native_mvaddstr,3);
+	duk_put_global_string(ctx,"mvaddstr");
+	duk_push_c_function(ctx,native_mvwaddstr,4);
+	duk_put_global_string(ctx,"mvwaddstr");
+	duk_push_c_function(ctx,native_waddstr,2);
+	duk_put_global_string(ctx,"waddstr");
+	duk_push_c_function(ctx,native_getstr,0);
+	duk_put_global_string(ctx,"getstr");
+	duk_push_c_function(ctx,native_wgetstr,1);
+	duk_put_global_string(ctx,"wgetstr");
+	duk_push_c_function(ctx,native_mvwgetstr,3);
+	duk_put_global_string(ctx,"mvwgetstr");
+	duk_push_c_function(ctx,native_clear,0);
+	duk_put_global_string(ctx,"clear");
+	duk_push_c_function(ctx,native_wclear,1);
+	duk_put_global_string(ctx,"wclear");
+	duk_push_c_function(ctx,native_attroff,1);
+	duk_put_global_string(ctx,"attroff");
+	duk_push_c_function(ctx,native_attron,1);
+	duk_put_global_string(ctx,"attron");
+	duk_push_c_function(ctx,native_wattron,2);
+	duk_put_global_string(ctx,"wattron");
+	duk_push_c_function(ctx,native_wattroff,2);
+	duk_put_global_string(ctx,"wattroff");
+	duk_push_c_function(ctx,native_attrset,1);
+	duk_put_global_string(ctx,"attrset");
+	duk_push_c_function(ctx,native_wattrset,2);
+	duk_put_global_string(ctx,"wattrset");
+	duk_push_c_function(ctx,native_newwin,4);
+	duk_put_global_string(ctx,"newwin");
+	duk_push_c_function(ctx,native_box,3);
+	duk_put_global_string(ctx,"box");
+	duk_push_c_function(ctx,native_delwin,1);
+	duk_put_global_string(ctx,"delwin");
+	duk_push_c_function(ctx,native_wborder ,9);
+	duk_put_global_string(ctx,"wborder");
+	duk_push_c_function(ctx,native_start_color,0);
+	duk_put_global_string(ctx,"start_color");
+	duk_push_c_function(ctx,native_init_pair,3);
+	duk_put_global_string(ctx,"init_pair");
+	duk_push_c_function(ctx,native_COLOR_PAIR,1);
+	duk_put_global_string(ctx,"COLOR_PAIR");
+
+	duk_push_c_function(ctx,native_clrtoeol,0);
+	duk_put_global_string(ctx,"clrtoeol");
+	duk_push_c_function(ctx,native_wclrtoeol,1);
+	duk_put_global_string(ctx,"wclrtoeol");
 }
 #endif
 
@@ -352,14 +681,6 @@ void duk_register_ncurses(duk_context*ctx){
 //WA_TOP		A_TOP
 //WA_VERTICAL	A_VERTICAL
 //WA_ITALIC	A_ITALIC
-//COLOR_BLACK	0
-//COLOR_RED	1
-//COLOR_GREEN	2
-//COLOR_YELLOW	3
-//COLOR_BLUE	4
-//COLOR_MAGENTA	5
-//COLOR_CYAN	6
-//COLOR_WHITE	7
 //
 //ACS_ULCORNER	NCURSES_ACS('l')
 //ACS_LLCORNER	NCURSES_ACS('m')
@@ -419,14 +740,9 @@ void duk_register_ncurses(duk_context*ctx){
 //_NC_EVENT_TIMEOUT_MSEC	1
 //_NC_EVENT_FILE		2
 //_NC_EVENT_FILE_READABLE	2
-//extern NCURSES_EXPORT(int) addch (const chtype);
 //extern NCURSES_EXPORT(int) addchnstr (const chtype *, int);
 //extern NCURSES_EXPORT(int) addchstr (const chtype *);
 //extern NCURSES_EXPORT(int) addnstr (const char *, int);
-//extern NCURSES_EXPORT(int) addstr (const char *);
-//extern NCURSES_EXPORT(int) attroff (NCURSES_ATTR_T);
-//extern NCURSES_EXPORT(int) attron (NCURSES_ATTR_T);
-//extern NCURSES_EXPORT(int) attrset (NCURSES_ATTR_T);
 //extern NCURSES_EXPORT(int) attr_get (attr_t *, NCURSES_PAIRS_T *, void *);
 //extern NCURSES_EXPORT(int) attr_off (attr_t, void *);
 //extern NCURSES_EXPORT(int) attr_on (attr_t, void *);
@@ -436,22 +752,17 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) bkgd (chtype);
 //extern NCURSES_EXPORT(void) bkgdset (chtype);
 //extern NCURSES_EXPORT(int) border (chtype,chtype,chtype,chtype,chtype,chtype,chtype,chtype);
-//extern NCURSES_EXPORT(int) box (WINDOW *, chtype, chtype);
 //extern NCURSES_EXPORT(bool) can_change_color (void);
 //extern NCURSES_EXPORT(int) chgat (int, attr_t, NCURSES_PAIRS_T, const void *);
-//extern NCURSES_EXPORT(int) clear (void);
 //extern NCURSES_EXPORT(int) clearok (WINDOW *,bool);
 //extern NCURSES_EXPORT(int) clrtobot (void);
-//extern NCURSES_EXPORT(int) clrtoeol (void);
 //extern NCURSES_EXPORT(int) color_content (NCURSES_COLOR_T,NCURSES_COLOR_T*,NCURSES_COLOR_T*,NCURSES_COLOR_T*);
 //extern NCURSES_EXPORT(int) color_set (NCURSES_PAIRS_T,void*);
-//extern NCURSES_EXPORT(int) COLOR_PAIR (int);
 //extern NCURSES_EXPORT(int) copywin (const WINDOW*,WINDOW*,int,int,int,int,int,int,int);
 //extern NCURSES_EXPORT(int) def_prog_mode (void);
 //extern NCURSES_EXPORT(int) def_shell_mode (void);
 //extern NCURSES_EXPORT(int) delay_output (int);
 //extern NCURSES_EXPORT(int) delch (void);
-//extern NCURSES_EXPORT(int) delwin (WINDOW *);
 //extern NCURSES_EXPORT(int) deleteln (void);
 //extern NCURSES_EXPORT(WINDOW *) derwin (WINDOW *,int,int,int,int);
 //extern NCURSES_EXPORT(WINDOW *) dupwin (WINDOW *);
@@ -464,7 +775,6 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(chtype) getbkgd (WINDOW *);
 //extern NCURSES_EXPORT(int) getch (void);
 //extern NCURSES_EXPORT(int) getnstr (char *, int);
-//extern NCURSES_EXPORT(int) getstr (char *);
 //extern NCURSES_EXPORT(WINDOW *) getwin (FILE *);
 //extern NCURSES_EXPORT(int) halfdelay (int);
 //extern NCURSES_EXPORT(bool) has_colors (void);
@@ -478,7 +788,6 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) inchnstr (chtype *, int);
 //extern NCURSES_EXPORT(int) inchstr (chtype *);
 //extern NCURSES_EXPORT(int) init_color (NCURSES_COLOR_T,NCURSES_COLOR_T,NCURSES_COLOR_T,NCURSES_COLOR_T);
-//extern NCURSES_EXPORT(int) init_pair (NCURSES_PAIRS_T,NCURSES_COLOR_T,NCURSES_COLOR_T);
 //extern NCURSES_EXPORT(int) innstr (char *, int);
 //extern NCURSES_EXPORT(int) insch (chtype);
 //extern NCURSES_EXPORT(int) insdelln (int);
@@ -494,11 +803,9 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) leaveok (WINDOW *,bool);
 //extern NCURSES_EXPORT(char *) longname (void);
 //extern NCURSES_EXPORT(int) move (int, int);
-//extern NCURSES_EXPORT(int) mvaddch (int, int, const chtype);
 //extern NCURSES_EXPORT(int) mvaddchnstr (int, int, const chtype *, int);
 //extern NCURSES_EXPORT(int) mvaddchstr (int, int, const chtype *);
 //extern NCURSES_EXPORT(int) mvaddnstr (int, int, const char *, int);
-//extern NCURSES_EXPORT(int) mvaddstr (int, int, const char *);
 //extern NCURSES_EXPORT(int) mvchgat (int, int, int, attr_t, NCURSES_PAIRS_T, const void *);
 //extern NCURSES_EXPORT(int) mvcur (int,int,int,int);
 //extern NCURSES_EXPORT(int) mvdelch (int, int);
@@ -518,16 +825,17 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) mvprintw (int,int, const char *,...)GCC_PRINTFLIKE(3,4);
 //extern NCURSES_EXPORT(int) mvscanw (int,int, const char *,...)GCC_SCANFLIKE(3,4);
 //extern NCURSES_EXPORT(int) mvvline (int, int, chtype, int);
-//extern NCURSES_EXPORT(int) mvwaddch (WINDOW *, int, int, const chtype);
 //extern NCURSES_EXPORT(int) mvwaddchnstr (WINDOW *, int, int, const chtype *, int);
 //extern NCURSES_EXPORT(int) mvwaddchstr (WINDOW *, int, int, const chtype *);
 //extern NCURSES_EXPORT(int) mvwaddnstr (WINDOW *, int, int, const char *, int);
-//extern NCURSES_EXPORT(int) mvwaddstr (WINDOW *, int, int, const char *);
+//
+//
+//
+//
 //extern NCURSES_EXPORT(int) mvwchgat (WINDOW *, int, int, int, attr_t, NCURSES_PAIRS_T, const void *);
 //extern NCURSES_EXPORT(int) mvwdelch (WINDOW *, int, int);
 //extern NCURSES_EXPORT(int) mvwgetch (WINDOW *, int, int);
 //extern NCURSES_EXPORT(int) mvwgetnstr (WINDOW *, int, int, char *, int);
-//extern NCURSES_EXPORT(int) mvwgetstr (WINDOW *, int, int, char *);
 //extern NCURSES_EXPORT(int) mvwhline (WINDOW *, int, int, chtype, int);
 //extern NCURSES_EXPORT(int) mvwin (WINDOW *,int,int);
 //extern NCURSES_EXPORT(chtype) mvwinch (WINDOW *, int, int);
@@ -542,7 +850,6 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) mvwvline (WINDOW *,int, int, chtype, int);
 //extern NCURSES_EXPORT(int) napms (int);
 //extern NCURSES_EXPORT(WINDOW *) newpad (int,int);
-//extern NCURSES_EXPORT(WINDOW *) newwin (int,int,int,int);
 //extern NCURSES_EXPORT(int) nl (void);
 //extern NCURSES_EXPORT(int) nonl (void);
 //extern NCURSES_EXPORT(int) overlay (const WINDOW*,WINDOW *);
@@ -603,25 +910,21 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) vw_printw (WINDOW *, const char *,va_list);
 //extern NCURSES_EXPORT(int) vwscanw (WINDOW *, const char *,va_list) GCC_DEPRECATED(use vw_scanw);
 //extern NCURSES_EXPORT(int) vw_scanw (WINDOW *, const char *,va_list);
-//extern NCURSES_EXPORT(int) waddch (WINDOW *, const chtype);
 //extern NCURSES_EXPORT(int) waddchnstr (WINDOW *,const chtype *,int);
 //extern NCURSES_EXPORT(int) waddchstr (WINDOW *,const chtype *);
 //extern NCURSES_EXPORT(int) waddnstr (WINDOW *,const char *,int);
-//extern NCURSES_EXPORT(int) waddstr (WINDOW *,const char *);
-//extern NCURSES_EXPORT(int) wattron (WINDOW *, int);
-//extern NCURSES_EXPORT(int) wattroff (WINDOW *, int);
-//extern NCURSES_EXPORT(int) wattrset (WINDOW *, int);
+//
+//
+//
+//
 //extern NCURSES_EXPORT(int) wattr_get (WINDOW *, attr_t *, NCURSES_PAIRS_T *, void *);
 //extern NCURSES_EXPORT(int) wattr_on (WINDOW *, attr_t, void *);
 //extern NCURSES_EXPORT(int) wattr_off (WINDOW *, attr_t, void *);
 //extern NCURSES_EXPORT(int) wattr_set (WINDOW *, attr_t, NCURSES_PAIRS_T, void *);
 //extern NCURSES_EXPORT(int) wbkgd (WINDOW *, chtype);
 //extern NCURSES_EXPORT(void) wbkgdset (WINDOW *,chtype);
-//extern NCURSES_EXPORT(int) wborder (WINDOW *,chtype,chtype,chtype,chtype,chtype,chtype,chtype,chtype);
 //extern NCURSES_EXPORT(int) wchgat (WINDOW *, int, attr_t, NCURSES_PAIRS_T, const void *);
-//extern NCURSES_EXPORT(int) wclear (WINDOW *);
 //extern NCURSES_EXPORT(int) wclrtobot (WINDOW *);
-//extern NCURSES_EXPORT(int) wclrtoeol (WINDOW *);
 //extern NCURSES_EXPORT(int) wcolor_set (WINDOW*,NCURSES_PAIRS_T,void*);
 //extern NCURSES_EXPORT(void) wcursyncup (WINDOW *);
 //extern NCURSES_EXPORT(int) wdelch (WINDOW *);
@@ -630,7 +933,6 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) werase (WINDOW *);
 //extern NCURSES_EXPORT(int) wgetch (WINDOW *);
 //extern NCURSES_EXPORT(int) wgetnstr (WINDOW *,char *,int);
-//extern NCURSES_EXPORT(int) wgetstr (WINDOW *, char *);
 //extern NCURSES_EXPORT(int) whline (WINDOW *, chtype, int);
 //extern NCURSES_EXPORT(chtype) winch (WINDOW *);
 //extern NCURSES_EXPORT(int) winchnstr (WINDOW *, chtype *, int);
@@ -661,12 +963,6 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(char *) tparm_varargs (const char *, ...);
 //extern NCURSES_EXPORT(char *) tiparm (const char *, ...);
 //extern NCURSES_EXPORT(int) getattrs (const WINDOW *);
-//extern NCURSES_EXPORT(int) getcurx (const WINDOW *);
-//extern NCURSES_EXPORT(int) getcury (const WINDOW *);
-//extern NCURSES_EXPORT(int) getbegx (const WINDOW *);
-//extern NCURSES_EXPORT(int) getbegy (const WINDOW *);
-//extern NCURSES_EXPORT(int) getmaxx (const WINDOW *);
-//extern NCURSES_EXPORT(int) getmaxy (const WINDOW *);
 //extern NCURSES_EXPORT(int) getparx (const WINDOW *);
 //extern NCURSES_EXPORT(int) getpary (const WINDOW *);
 //#define vid_attr(a,pair,opts) vidattr(a)
@@ -825,30 +1121,6 @@ void duk_register_ncurses(duk_context*ctx){
 //
 //#define NCURSES_ATTR_SHIFT       8
 //#define NCURSES_BITS(mask,shift) (NCURSES_CAST(chtype,(mask)) << ((shift) + NCURSES_ATTR_SHIFT))
-//
-//#define A_NORMAL	(1U - 1U)
-//#define A_ATTRIBUTES	NCURSES_BITS(~(1U - 1U),0)
-//#define A_CHARTEXT	(NCURSES_BITS(1U,0) - 1U)
-//#define A_COLOR		NCURSES_BITS(((1U) << 8) - 1U,0)
-//#define A_STANDOUT	NCURSES_BITS(1U,8)
-//#define A_UNDERLINE	NCURSES_BITS(1U,9)
-//#define A_REVERSE	NCURSES_BITS(1U,10)
-//#define A_BLINK		NCURSES_BITS(1U,11)
-//#define A_DIM		NCURSES_BITS(1U,12)
-//#define A_BOLD		NCURSES_BITS(1U,13)
-//#define A_ALTCHARSET	NCURSES_BITS(1U,14)
-//#define A_INVIS		NCURSES_BITS(1U,15)
-//#define A_PROTECT	NCURSES_BITS(1U,16)
-//#define A_HORIZONTAL	NCURSES_BITS(1U,17)
-//#define A_LEFT		NCURSES_BITS(1U,18)
-//#define A_LOW		NCURSES_BITS(1U,19)
-//#define A_RIGHT		NCURSES_BITS(1U,20)
-//#define A_TOP		NCURSES_BITS(1U,21)
-//#define A_VERTICAL	NCURSES_BITS(1U,22)
-//
-//#if 1
-//#define A_ITALIC	NCURSES_BITS(1U,23)	/* ncurses extension */
-//#endif
 //
 ///*
 // * Most of the pseudo functions are macros that either provide compatibility
@@ -1523,7 +1795,6 @@ void duk_register_ncurses(duk_context*ctx){
 //extern NCURSES_EXPORT(int) waddwstr (WINDOW *,const wchar_t *);		/* generated:WIDEC */
 //extern NCURSES_EXPORT(int) wbkgrnd (WINDOW *,const cchar_t *);		/* implemented */
 //extern NCURSES_EXPORT(void) wbkgrndset (WINDOW *,const cchar_t *);	/* implemented */
-//extern NCURSES_EXPORT(int) wborder_set (WINDOW *,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*,const cchar_t*);	/* implemented */
 //extern NCURSES_EXPORT(int) wecho_wchar (WINDOW *, const cchar_t *);	/* implemented */
 //extern NCURSES_EXPORT(int) wget_wch (WINDOW *, wint_t *);		/* implemented */
 //extern NCURSES_EXPORT(int) wget_wstr (WINDOW *, wint_t *);		/* generated:WIDEC */

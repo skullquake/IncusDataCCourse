@@ -21,6 +21,12 @@
 #ifdef DUK_USE_NCURSES
 #include"duktape/ncurses.h"
 #endif
+#ifdef DUK_USE_PTHREAD
+#include"duktape/pthread.h"
+#endif
+#ifdef DUK_USE_DUKGLUE
+#include"duktape/dukglue.h"
+#endif
 #include<dirent.h>
 #include<sys/stat.h>
 #define PATH_MAX_STRING_SIZE 256
@@ -318,8 +324,14 @@ void duk_register(duk_context*ctx){
 #ifdef DUK_USE_CACA
 	duk_register_caca(ctx);
 #endif
-#ifdef DUK_USE_CACA
+#ifdef DUK_USE_NCURSES
 	duk_register_ncurses(ctx);
+#endif
+#ifdef DUK_USE_PTHREAD
+	duk_register_pthread(ctx);
+#endif
+#ifdef DUK_USE_DUKGLUE
+	duk_register_dukgluetest(ctx);
 #endif
 	//----------------------------------------
 	duk_push_c_function(ctx,native_mkdir_p,2);

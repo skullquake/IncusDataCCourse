@@ -13,7 +13,7 @@ ifeq ($(OS),Windows_NT)
         THEOS := $(patsubst MINGW64%,MINGW,$(THEOS))
         THEOS := $(patsubst MINGW%,MINGW64,$(THEOS))
     endif
-    EXT := .exe
+    EXT := .dll
 else
     UNAME_S := $(shell uname -s)
     THEOS := $(UNAME_S)
@@ -24,7 +24,7 @@ else
     ifneq ($(filter arm%,$(UNAME_P)),)
         THEOS=ARM
     endif
-    EXT := .out
+    EXT := .so
 endif
 #-------------------------------------------------------------------------------
 #PROCESSOR DETECTION
@@ -59,43 +59,20 @@ CFLAGS=\
 	-Wextra\
 	-Wpedantic\
 	-std=c99\
+	-fPIC\
 	-I./src\
-	-I./src/sqlite\
-	-I./src/caca
+	-I./include
 CXXFLAGS=\
 	-Wall\
 	-Wextra\
 	-Wpedantic\
+	-fPIC\
 	-I./src\
-	-I./src/sqlite\
-	-I./src/caca
+	-I./include
 LDFLAGS=
 ifeq ($(THEOS),Windows)
-	SILENT=> NUL 2>&1
-	LDFLAGS+=-lcaca 
- 	LDFLAGS+=-lwsock32
-	LDFLAGS+=-lws2_32
-	CFLAGS-=-DDUK_USE_CURL
-	CFLAGS-=-DDUK_USE_CACA
-	CFLAGS-=-DDUK_USE_NCURSES
-	CFLAGS-=-DDUK_USE_PTHREAD
-	CFLAGS-=-DDUK_USE_DUKGLUE
-	CFLAGS+=-I/opt/gcc/17.1/MinGW/include
-	CFLAGS+=-L/opt/gcc/17.1/MinGW/lib
 	BINDIR=./bin/windows/
 else
-	LDFLAGS+=-lm
-	LDFLAGS+=-ldl
-	CFLAGS+=-DDUK_USE_CURL
-	LDFLAGS+=-lcurl
-	CFLAGS+=-DDUK_USE_CACA
-	LDFLAGS+=-lcaca 
-	CFLAGS+=-DDUK_USE_NCURSES
-	LDFLAGS+=-lncurses
-	CFLAGS+=-DDUK_USE_PTHREAD
-	LDFLAGS+=-lpthread
-	CXXFLAGS+=-DDUK_USE_DUKGLUE
-	CFLAGS+=-DDUK_USE_DUKGLUE
 	BINDIR=./bin/linux/
 endif
 #-------------------------------------------------------------------------------
@@ -105,22 +82,11 @@ DOXYGEN=doxygen
 DOT=dot
 #DOC=./dox/html/index.html
 README=./README.md
-DOXYFILE=Doxyfile
+DOXYFILE=DoxyFile
 #-------------------------------------------------------------------------------
 #PRETTIFY TOOLS
 #-------------------------------------------------------------------------------
 INDENT=indent
-#-------------------------------------------------------------------------------
-#RUN CONFIGURATION
-#-------------------------------------------------------------------------------
-PORT=5000
-INITSCR=./scr/srv/init.js 
-ifeq ($(THEOS),Windows)
-	PORT=5000
-else
-	PORT=5001
-endif
-
 #-------------------------------------------------------------------------------
 #BITBUCKET
 #-------------------------------------------------------------------------------
@@ -142,6 +108,18 @@ else
 	RM=rm -r
 	RMDIR=rm -r
 	CP=cp -r
+endif
+#-------------------------------------------------------------------------------
+#TOUCH
+#-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+define FNTOUCH
+$(shell (for %%a in ($(1)) do if exist "%%~a" (pushd "%%~dpa" && ( copy /b "%%~nxa"+,, & popd )) else (type nul > "%%~fa")) >nul 2>&1)
+endef
+else
+define FNTOUCH
+touch $(1)
+endef
 endif
 #-------------------------------------------------------------------------------
 #PATH SEPERATORS
@@ -172,13 +150,11 @@ ifeq ($(THEOS),Windows)
 else
 	_SRCDIR=$(SRCDIR)
 endif
-
 #-------------------------------------------------------------------------------
 ifeq ($(THEOS),Windows)
 	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
 else
-	_SRC:=$(shell find $(SRCDIR) -type f \( -iname \*.c -o -iname \*.cpp \))
-#	_SRC:=$(shell find $(SRCDIR) -name '*.c*')
+	_SRC:=$(shell find $(SRCDIR) -name '*.c*')
 endif
 OBJS=$(addprefix $(_BINDIR),$(patsubst %.c,%.o ,$(patsubst %.cpp,%.o,$(_SRC))))
 ifeq ($(THEOS),Windows)
@@ -186,8 +162,8 @@ ifeq ($(THEOS),Windows)
 else
 	_OBJS=$(OBJS)
 endif
-_BIN=$(_BINDIR)a$(EXT)
-
+BINNAM=$(shell basename `pwd`)
+_BIN=$(_BINDIR)lib$(BINNAM)$(EXT)
 #-------------------------------------------------------------------------------
 ifeq (run,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -196,26 +172,20 @@ endif
 #-------------------------------------------------------------------------------
 all:$(_BIN)
 #-------------------------------------------------------------------------------
-run:$(_BIN)
-	@$(_BIN) $(RUN_ARGS) 
-serve:$(_BIN)
-	@$(_BIN)\
-		--serve\
-		--port $(PORT)\
-		--init $(INITSCR)
-#-------------------------------------------------------------------------------
 $(_BIN):$(_OBJS)
 	@echo "generating $@..."
 	@$(CXX) \
+		-shared \
 		$(_OBJS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
-
+	$(CP) $(_BIN) ../../lib
+	$(MKDIR) ../../include/$(BINNAM)
+	$(CP) ./include/* ../../include/$(BINNAM)
 #-------------------------------------------------------------------------------
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-#		-x c
 	@$(CC)\
 		$(CFLAGS)\
 		-c $<\
@@ -244,6 +214,7 @@ $(_BINDIR)%.o: %.cpp
 		$(CXXFLAGS)\
 		-c $<\
 		-o $@
+
 #-------------------------------------------------------------------------------
 define dump
 objdump $(1) -t
@@ -252,25 +223,41 @@ dumpall:\
 	$(_OBJS)
 	$(foreach obj,$(_OBJS),$(call dump,$(obj)))
 #-------------------------------------------------------------------------------
-prettify:$(_SRC)
-	echo $(INDENT) $(_SRC)
+pretty:$(_SRC)
+	$(INDENT) $(_SRC)
+	make -t
+#$(call FNTOUCH,Makefile)
 #-------------------------------------------------------------------------------
 doc:\
 	$(SRC) \
 	$(README) \
 	$(DOXYFILE) \
-	makefile
+	Makefile
 	@echo building documentation...
-	@$(DOXYGEN)
+	@$(DOXYGEN) $(DOXYFILE)
 #-------------------------------------------------------------------------------
 .phony:test
 #-------------------------------------------------------------------------------
 clean:
-	$(RMDIR) $(_BINDIR)
+	@-$(RMDIR) $(_BINDIR)
+	@-$(RMDIR) doc
 #$(SILENT)
 #-------------------------------------------------------------------------------
+ifeq (test,$(firstword $(MAKECMDGOALS)))
+  TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(TEST_ARGS):;@:)
+endif
+.phony:test
 test:
-	echo $(SRC)
-	echo $(_SRC)
-	echo $(OBJS)
-	echo $(_OBJS)
+	-@$(CC)\
+		-DDEBUG\
+		$(CFLAGS)\
+		$(TEST_ARGS)\
+		$(LDFLAGS)\
+		-o tmp.exe
+	-@tmp.exe
+	-@$(RM) tmp.exe
+test2:
+	@echo BINNAm:
+	@echo $(BINNAM)
+#-------------------------------------------------------------------------------

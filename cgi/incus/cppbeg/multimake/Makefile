@@ -13,7 +13,7 @@ ifeq ($(OS),Windows_NT)
         THEOS := $(patsubst MINGW64%,MINGW,$(THEOS))
         THEOS := $(patsubst MINGW%,MINGW64,$(THEOS))
     endif
-    EXT := .exe
+    EXT := .cgi
 else
     UNAME_S := $(shell uname -s)
     THEOS := $(UNAME_S)
@@ -24,7 +24,7 @@ else
     ifneq ($(filter arm%,$(UNAME_P)),)
         THEOS=ARM
     endif
-    EXT := .out
+    EXT := .cgi
 endif
 #-------------------------------------------------------------------------------
 #PROCESSOR DETECTION
@@ -54,50 +54,33 @@ CC=gcc
 STRIP=strip
 BINDIR=./bin/
 SRCDIR=src
+LIBDIR=lib
 CFLAGS=\
 	-Wall\
 	-Wextra\
 	-Wpedantic\
 	-std=c99\
 	-I./src\
-	-I./src/sqlite\
-	-I./src/caca
+	-I./include\
+	-L./lib
 CXXFLAGS=\
 	-Wall\
 	-Wextra\
 	-Wpedantic\
+	-I./include\
 	-I./src\
-	-I./src/sqlite\
-	-I./src/caca
+	-L./lib
 LDFLAGS=
 ifeq ($(THEOS),Windows)
 	SILENT=> NUL 2>&1
-	LDFLAGS+=-lcaca 
- 	LDFLAGS+=-lwsock32
-	LDFLAGS+=-lws2_32
-	CFLAGS-=-DDUK_USE_CURL
-	CFLAGS-=-DDUK_USE_CACA
-	CFLAGS-=-DDUK_USE_NCURSES
-	CFLAGS-=-DDUK_USE_PTHREAD
-	CFLAGS-=-DDUK_USE_DUKGLUE
-	CFLAGS+=-I/opt/gcc/17.1/MinGW/include
-	CFLAGS+=-L/opt/gcc/17.1/MinGW/lib
 	BINDIR=./bin/windows/
 else
-	LDFLAGS+=-lm
-	LDFLAGS+=-ldl
 	CFLAGS+=-DDUK_USE_CURL
-	LDFLAGS+=-lcurl
-	CFLAGS+=-DDUK_USE_CACA
-	LDFLAGS+=-lcaca 
-	CFLAGS+=-DDUK_USE_NCURSES
-	LDFLAGS+=-lncurses
-	CFLAGS+=-DDUK_USE_PTHREAD
-	LDFLAGS+=-lpthread
-	CXXFLAGS+=-DDUK_USE_DUKGLUE
-	CFLAGS+=-DDUK_USE_DUKGLUE
 	BINDIR=./bin/linux/
+	LDFLAGS+=-ldl
 endif
+#LDFLAGS+=-Wl,-rpath=./lib
+#LDFLAGS+=-la
 #-------------------------------------------------------------------------------
 #DOCUMENTATION TOOLS
 #-------------------------------------------------------------------------------
@@ -105,22 +88,11 @@ DOXYGEN=doxygen
 DOT=dot
 #DOC=./dox/html/index.html
 README=./README.md
-DOXYFILE=Doxyfile
+DOXYFILE=DoxyFile
 #-------------------------------------------------------------------------------
 #PRETTIFY TOOLS
 #-------------------------------------------------------------------------------
 INDENT=indent
-#-------------------------------------------------------------------------------
-#RUN CONFIGURATION
-#-------------------------------------------------------------------------------
-PORT=5000
-INITSCR=./scr/srv/init.js 
-ifeq ($(THEOS),Windows)
-	PORT=5000
-else
-	PORT=5001
-endif
-
 #-------------------------------------------------------------------------------
 #BITBUCKET
 #-------------------------------------------------------------------------------
@@ -142,6 +114,18 @@ else
 	RM=rm -r
 	RMDIR=rm -r
 	CP=cp -r
+endif
+#-------------------------------------------------------------------------------
+#TOUCH
+#-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+define FNTOUCH
+$(shell (for %%a in ($(1)) do if exist "%%~a" (pushd "%%~dpa" && ( copy /b "%%~nxa"+,, & popd )) else (type nul > "%%~fa")) >nul 2>&1)
+endef
+else
+define FNTOUCH
+touch $(1)
+endef
 endif
 #-------------------------------------------------------------------------------
 #PATH SEPERATORS
@@ -177,8 +161,7 @@ endif
 ifeq ($(THEOS),Windows)
 	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
 else
-	_SRC:=$(shell find $(SRCDIR) -type f \( -iname \*.c -o -iname \*.cpp \))
-#	_SRC:=$(shell find $(SRCDIR) -name '*.c*')
+	_SRC:=$(shell find $(SRCDIR) -name '*.c*')
 endif
 OBJS=$(addprefix $(_BINDIR),$(patsubst %.c,%.o ,$(patsubst %.cpp,%.o,$(_SRC))))
 ifeq ($(THEOS),Windows)
@@ -187,30 +170,26 @@ else
 	_OBJS=$(OBJS)
 endif
 _BIN=$(_BINDIR)a$(EXT)
-
 #-------------------------------------------------------------------------------
 ifeq (run,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
 endif
 #-------------------------------------------------------------------------------
-all:$(_BIN)
+all:\
+	$(_BIN)
 #-------------------------------------------------------------------------------
 run:$(_BIN)
 	@$(_BIN) $(RUN_ARGS) 
-serve:$(_BIN)
-	@$(_BIN)\
-		--serve\
-		--port $(PORT)\
-		--init $(INITSCR)
 #-------------------------------------------------------------------------------
-$(_BIN):$(_OBJS)
+$(_BIN):\
+	$(_OBJS)
 	@echo "generating $@..."
-	@$(CXX) \
+	$(CXX) \
 		$(_OBJS) \
+		$(CXXFLAGS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
-
 #-------------------------------------------------------------------------------
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
@@ -244,6 +223,7 @@ $(_BINDIR)%.o: %.cpp
 		$(CXXFLAGS)\
 		-c $<\
 		-o $@
+
 #-------------------------------------------------------------------------------
 define dump
 objdump $(1) -t
@@ -252,25 +232,48 @@ dumpall:\
 	$(_OBJS)
 	$(foreach obj,$(_OBJS),$(call dump,$(obj)))
 #-------------------------------------------------------------------------------
-prettify:$(_SRC)
-	echo $(INDENT) $(_SRC)
-#-------------------------------------------------------------------------------
 doc:\
 	$(SRC) \
 	$(README) \
 	$(DOXYFILE) \
-	makefile
+	Makefile
 	@echo building documentation...
-	@$(DOXYGEN)
-#-------------------------------------------------------------------------------
-.phony:test
+	@$(DOXYGEN) $(DOXYFILE)
 #-------------------------------------------------------------------------------
 clean:
-	$(RMDIR) $(_BINDIR)
+	@-$(RMDIR) $(_BINDIR)
+	@-$(RMDIR) doc
 #$(SILENT)
 #-------------------------------------------------------------------------------
+ifeq (test,$(firstword $(MAKECMDGOALS)))
+  TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(TEST_ARGS):;@:)
+endif
+#-------------------------------------------------------------------------------
+_LIBDIR=
+ifeq ($(THEOS),Windows)
+	_LIBDIR=$(subst /,$(PATHSEPSTRIPPED),$(LIBDIR))
+else
+	_LIBDIR=$(LIBDIR)
+endif
+ifeq ($(THEOS),Windows)
+	_MAKEFILES:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_LIBDIR) /s /m Makefile /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_LIBDIR)$(PATHSEPSTRIPPED)%%~F)
+else
+	_MAKEFILES:=$(shell find $(_LIBDIR) -name 'Makefile')
+endif
+
+.phony:\
+	libraries\
+	test
+libraries:
+	-$(shell find ./libsrc|grep Makefile|while read MAKEFILE; do make -C `dirname $MAKEFILE`;done)
 test:
-	echo $(SRC)
-	echo $(_SRC)
-	echo $(OBJS)
-	echo $(_OBJS)
+	-@$(CC)\
+		-DDEBUG\
+		$(CFLAGS)\
+		$(TEST_ARGS)\
+		$(LDFLAGS)\
+		-o tmp.exe
+	-@tmp.exe
+	-@$(RM) tmp.exe
+#-------------------------------------------------------------------------------

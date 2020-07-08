@@ -1,0 +1,2 @@
+#!/data/data/com.termux/files/usr/bin/bash
+find ./libsrc|grep Makefile|while read MAKEFILE; do make -C `dirname $MAKEFILE`;done
