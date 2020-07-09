@@ -17,10 +17,12 @@
  *  dealing with windows:
  *  https://www.codeproject.com/Articles/13501/Platform-Independent-Coding-DLLs-and-SOs
  */
-
-#include<stdio.h>
-#include<stdlib.h>
+#include<iostream>
+#include<vector>
+#include<cstdlib>
+#include<cstdio>
 #include<string>
+#include<dirent.h>
 #ifdef _WIN32
 	#include<windows.h>
 #else
@@ -35,6 +37,33 @@ std::string publicstring="Lorem ipsum sit consecutar";
 
 
 int main(void){
+	{
+		std::string path="./lib";
+		DIR*dp=nullptr;
+		dp=opendir(path.c_str());
+		struct dirent*entry=nullptr;
+		std::vector<void*> vhdl;
+		if(dp!=nullptr){
+			while((entry=readdir(dp))){
+				if(entry->d_type==DT_REG){
+					void*hdl;
+					char sopath[1024];
+					strcpy(sopath,path.c_str());
+					strcat(sopath,"/");
+					strcat(sopath,entry->d_name);
+					std::cout<<"Loading "<<sopath<<std::endl;
+					hdl=dlopen(sopath,RTLD_LAZY);
+					if(hdl!=NULL)vhdl.push_back(hdl);
+				}
+			}
+			closedir(dp);
+			getchar();
+			while(!vhdl.empty()){
+				dlclose(vhdl.back());
+				vhdl.pop_back();
+			}
+		}
+	}
 	{
 		getchar();
 		void*hdl;

@@ -67,6 +67,7 @@ CXXFLAGS=\
 	-Wall\
 	-Wextra\
 	-Wpedantic\
+	-std=c++17\
 	-I./include\
 	-I./src\
 	-L./lib
