@@ -23,6 +23,7 @@
 #include<cstdio>
 #include<string>
 #include<dirent.h>
+#include<cstring>
 #ifdef _WIN32
 	#include<windows.h>
 #else
@@ -45,21 +46,35 @@ int main(void){
 		std::vector<void*> vhdl;
 		if(dp!=nullptr){
 			while((entry=readdir(dp))){
-				if(entry->d_type==DT_REG){
-					void*hdl;
-					char sopath[1024];
-					strcpy(sopath,path.c_str());
-					strcat(sopath,"/");
-					strcat(sopath,entry->d_name);
-					std::cout<<"Loading "<<sopath<<std::endl;
-					hdl=dlopen(sopath,RTLD_LAZY);
-					if(hdl!=NULL)vhdl.push_back(hdl);
-				}
+				//if(entry->d_type==DT_REG){
+#ifdef _WIN32
+					if(strstr(entry->d_name,".dll")){
+#else
+					if(strstr(entry->d_name,".so")){
+#endif
+						void*hdl;
+						char sopath[1024];
+						strcpy(sopath,path.c_str());
+						strcat(sopath,"/");
+						strcat(sopath,entry->d_name);
+						std::cout<<"Loading "<<sopath<<std::endl;
+#ifdef _WIN32
+						hdl=LoadLibrary(sopath);
+#else
+						hdl=dlopen(sopath,RTLD_LAZY);
+#endif
+						if(hdl!=NULL)vhdl.push_back(hdl);
+					}
+				//}
 			}
 			closedir(dp);
 			getchar();
 			while(!vhdl.empty()){
+#ifdef _WIN32
+				FreeLibrary((HMODULE)vhdl.back());
+#else
 				dlclose(vhdl.back());
+#endif
 				vhdl.pop_back();
 			}
 		}

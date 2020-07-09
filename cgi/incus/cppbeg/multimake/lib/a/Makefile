@@ -83,6 +83,9 @@ CXXFLAGS=\
 LDFLAGS=
 ifeq ($(THEOS),Windows)
 	BINDIR=./bin/windows/
+#	LDFLAGS+=-Wl,--out-implib,$(BINNAM)_dll.a
+#	LDFLAGS+=--no-undefined
+	LDFLAGS+=--enable-runtime-pseudo-reloc
 else
 	BINDIR=./bin/linux/
 endif
@@ -209,7 +212,7 @@ all:$(_BIN)
 $(_BIN):$(_OBJS)
 	@echo "generating $@..."
 	@$(CXX) \
-		-shared \
+		-shared\
 		$(_OBJS) \
 		$(LDFLAGS) \
 		-o $(_BIN)

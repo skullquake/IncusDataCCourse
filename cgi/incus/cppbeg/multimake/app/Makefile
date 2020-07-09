@@ -79,8 +79,8 @@ else
 	CFLAGS+=-DDUK_USE_CURL
 	BINDIR=./bin/linux/
 	LDFLAGS+=-ldl
+	LDFLAGS+=-rdynamic
 endif
-LDFLAGS+=-rdynamic
 #LDFLAGS+=-Wl,-rpath=./lib
 #LDFLAGS+=-la
 #-------------------------------------------------------------------------------
