@@ -243,6 +243,8 @@ doc:\
 clean:
 	@-$(RMDIR) $(_BINDIR)
 	@-$(RMDIR) doc
+	@-$(RMDIR) lib
+	@-$(RMDIR) include
 #$(SILENT)
 #-------------------------------------------------------------------------------
 ifeq (test,$(firstword $(MAKECMDGOALS)))

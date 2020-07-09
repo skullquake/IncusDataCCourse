@@ -80,10 +80,6 @@ int main(void){
 					fprintf(stderr,"%s\n",err);
 				}
 #endif
-
-				if((err=dlerror())!=NULL){
-					fprintf(stderr,"%s\n",err);
-				}
 				if(fn!=NULL){
 					fn();
 					getchar();
@@ -95,16 +91,13 @@ int main(void){
 				F*(*fn)(std::string);
 				const char*fnnam="mkF";
 #ifdef _WIN32
-				fn=(void(*)(void))GetProcAddress((HMODULE)hdl,fnnam); 
+				fn=(F*(*)(std::string))GetProcAddress((HMODULE)hdl,fnnam); 
 #else
 				fn=(F*(*)(std::string))dlsym(hdl,fnnam);
 				if((err=dlerror())!=NULL){
 					fprintf(stderr,"%s\n",err);
 				}
 #endif
-				if((err=dlerror())!=NULL){
-					fprintf(stderr,"%s\n",err);
-				}
 				if(fn!=NULL){
 					F*f;
 					f=fn("Foo");
