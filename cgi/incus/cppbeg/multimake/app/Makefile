@@ -79,6 +79,7 @@ else
 	BINDIR=./bin/linux/
 	LDFLAGS+=-ldl
 endif
+LDFLAGS+=-rdynamic
 #LDFLAGS+=-Wl,-rpath=./lib
 #LDFLAGS+=-la
 #-------------------------------------------------------------------------------

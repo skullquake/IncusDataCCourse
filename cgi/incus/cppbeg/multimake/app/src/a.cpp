@@ -27,9 +27,13 @@
 	#include"dlfcn.h"
 #endif
 #include"a/mycpplibpublic.h"
-extern "C"{
-std::string publicstring="asdf";
-}
+
+
+//requires -rdynamic
+//allows shared libraries to access this
+std::string publicstring="Lorem ipsum sit consecutar";
+
+
 int main(void){
 	{
 		getchar();
