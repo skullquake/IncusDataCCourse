@@ -1,2 +1,2 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/usr/bin/env bash
 cat /proc/*/maps | awk '{print $6;}' | grep '\.so' | sort | uniq

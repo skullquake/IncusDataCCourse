@@ -53,6 +53,7 @@ endif
 CC=gcc
 STRIP=strip
 BINDIR=./bin/
+INSTALLDIR=../../app/
 SRCDIR=src
 CFLAGS=\
 	-Wall\
@@ -162,7 +163,15 @@ ifeq ($(THEOS),Windows)
 else
 	_OBJS=$(OBJS)
 endif
-BINNAM=$(shell basename `pwd`)
+#-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+	CWDNAM=$(shell for %%I in (.) do echo %%~nxI)
+else
+	CWDNAM=$(shell basename `pwd`)
+endif
+
+#-------------------------------------------------------------------------------
+BINNAM=$(CWDNAM)
 _BIN=$(_BINDIR)lib$(BINNAM)$(EXT)
 #-------------------------------------------------------------------------------
 ifeq (run,$(firstword $(MAKECMDGOALS)))
@@ -179,9 +188,6 @@ $(_BIN):$(_OBJS)
 		$(_OBJS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
-	$(CP) $(_BIN) ../../lib
-	$(MKDIR) ../../include/$(BINNAM)
-	$(CP) ./include/* ../../include/$(BINNAM)
 #-------------------------------------------------------------------------------
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
@@ -214,7 +220,6 @@ $(_BINDIR)%.o: %.cpp
 		$(CXXFLAGS)\
 		-c $<\
 		-o $@
-
 #-------------------------------------------------------------------------------
 define dump
 objdump $(1) -t
@@ -247,7 +252,14 @@ ifeq (test,$(firstword $(MAKECMDGOALS)))
   TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(TEST_ARGS):;@:)
 endif
-.phony:test
+.phony:\
+	install
+install:
+	@echo "installing..."
+	$(CP) $(_BIN) $(INSTALLDIR)lib
+	$(MKDIR) $(INSTALLDIR)include/$(BINNAM)
+	$(CP) ./include/* $(INSTALLDIR)include/$(BINNAM)
+
 test:
 	-@$(CC)\
 		-DDEBUG\
@@ -258,6 +270,8 @@ test:
 	-@tmp.exe
 	-@$(RM) tmp.exe
 test2:
-	@echo BINNAm:
-	@echo $(BINNAM)
+	@echo _BIN:
+	@echo $(_BIN)
+	@echo CWDNAM:
+	@echo $(CWDNAM)
 #-------------------------------------------------------------------------------

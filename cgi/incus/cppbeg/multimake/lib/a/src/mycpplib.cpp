@@ -1,12 +1,12 @@
 #include"mycpplib.h"
 #include<iostream>
-Foo::Foo():ma(42){};
-Foo::~Foo(){};
+Foo::Foo():ma(42){}
+Foo::~Foo(){}
 void Foo::test(){
 	std::cout<<"Foo::test"<<std::endl;
 }
-Bar::Bar():ma(24){};
-Bar::~Bar(){};
+Bar::Bar():ma(24){}
+Bar::~Bar(){}
 void Bar::test(){
 	std::cout<<"Bar::test"<<std::endl;
 }
