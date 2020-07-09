@@ -50,10 +50,20 @@ else ifeq ($(THEOS),$(filter $(THEOS),Linux Darwin ARM))
     endif
 endif
 #-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+	CWDNAM=$(shell for %%I in (.) do echo %%~nxI)
+else
+	CWDNAM=$(shell basename `pwd`)
+endif
+#-------------------------------------------------------------------------------
 CC=gcc
 STRIP=strip
 BINDIR=./bin/
-INSTALLDIR=../../app/
+BINNAM=$(CWDNAM)
+INSTALLDIR=../../app
+INSTALLDIR_LIB=$(INSTALLDIR)/lib/
+INSTALLDIR_INC=$(INSTALLDIR)/include/$(BINNAM)
+INCLUDEDIR=./include/
 SRCDIR=src
 CFLAGS=\
 	-Wall\
@@ -104,6 +114,8 @@ ifeq ($(THEOS),Windows)
 	RM=erase
 	RMDIR=rmdir /s/q
 	CP=copy /Y
+#	CP=xcopy /e/i/c/y
+#	CP=xcopy /e/i/y 
 else
 	MKDIR=mkdir -p
 	RM=rm -r
@@ -122,6 +134,19 @@ define FNTOUCH
 touch $(1)
 endef
 endif
+#-------------------------------------------------------------------------------
+#PWD
+#-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+define FNPWD
+$(shell echo %cd%)
+endef
+else
+define FNPWD
+pwd
+endef
+endif
+
 #-------------------------------------------------------------------------------
 #PATH SEPERATORS
 #-------------------------------------------------------------------------------
@@ -151,6 +176,16 @@ ifeq ($(THEOS),Windows)
 else
 	_SRCDIR=$(SRCDIR)
 endif
+ifeq ($(THEOS),Windows)
+	_INSTALLDIR_LIB=$(subst /,$(PATHSEPSTRIPPED),$(INSTALLDIR_LIB))
+	_INSTALLDIR_INC=$(subst /,$(PATHSEPSTRIPPED),$(INSTALLDIR_INC))
+	_INCLUDEDIR=$(subst /,$(PATHSEPSTRIPPED),$(INCLUDEDIR))
+else
+	_INSTALLDIR_LIB=$(INSTALLDIR_LIB)
+	_INSTALLDIR_INC=$(INSTALLDIR_INC)
+	_INCLUDEDIR=$(INCLUDEDIR)
+endif
+_BIN=$(_BINDIR)lib$(BINNAM)$(EXT)
 #-------------------------------------------------------------------------------
 ifeq ($(THEOS),Windows)
 	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
@@ -163,16 +198,6 @@ ifeq ($(THEOS),Windows)
 else
 	_OBJS=$(OBJS)
 endif
-#-------------------------------------------------------------------------------
-ifeq ($(THEOS),Windows)
-	CWDNAM=$(shell for %%I in (.) do echo %%~nxI)
-else
-	CWDNAM=$(shell basename `pwd`)
-endif
-
-#-------------------------------------------------------------------------------
-BINNAM=$(CWDNAM)
-_BIN=$(_BINDIR)lib$(BINNAM)$(EXT)
 #-------------------------------------------------------------------------------
 ifeq (run,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -207,7 +232,6 @@ $(_BINDIR)\%.o: %.cpp
 $(_BINDIR)%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-#		-x c
 	@$(CC)\
 		$(CFLAGS)\
 		-c $<\
@@ -231,7 +255,6 @@ dumpall:\
 pretty:$(_SRC)
 	$(INDENT) $(_SRC)
 	make -t
-#$(call FNTOUCH,Makefile)
 #-------------------------------------------------------------------------------
 doc:\
 	$(SRC) \
@@ -246,7 +269,6 @@ doc:\
 clean:
 	@-$(RMDIR) $(_BINDIR)
 	@-$(RMDIR) doc
-#$(SILENT)
 #-------------------------------------------------------------------------------
 ifeq (test,$(firstword $(MAKECMDGOALS)))
   TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
@@ -256,22 +278,16 @@ endif
 	install
 install:
 	@echo "installing..."
-	$(CP) $(_BIN) $(INSTALLDIR)lib
-	$(MKDIR) $(INSTALLDIR)include/$(BINNAM)
-	$(CP) ./include/* $(INSTALLDIR)include/$(BINNAM)
-
+	@-$(MKDIR) $(_INSTALLDIR_LIB) $(SILENT)
+	@-$(MKDIR) $(_INSTALLDIR_INC) $(SILENT)
+	@-$(CP) $(_BIN) $(_INSTALLDIR_LIB) $(SILENT)
+	@-$(CP) $(_INCLUDEDIR)* $(_INSTALLDIR_INC) $(SILENT)
 test:
-	-@$(CC)\
-		-DDEBUG\
-		$(CFLAGS)\
-		$(TEST_ARGS)\
-		$(LDFLAGS)\
-		-o tmp.exe
-	-@tmp.exe
-	-@$(RM) tmp.exe
-test2:
 	@echo _BIN:
 	@echo $(_BIN)
 	@echo CWDNAM:
 	@echo $(CWDNAM)
+	@echo _INCLUDEDIR:
+	@echo $(_INCLUDEDIR)
+	@echo $(call FNPWD)
 #-------------------------------------------------------------------------------
