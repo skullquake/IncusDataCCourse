@@ -24,6 +24,7 @@
 #include<string>
 #include<dirent.h>
 #include<cstring>
+#include<map>
 #ifdef _WIN32
 	#include<windows.h>
 #else
@@ -35,8 +36,7 @@
 //requires -rdynamic
 //allows shared libraries to access this
 std::string publicstring="Lorem ipsum sit consecutar";
-
-
+std::map<std::string,F*(*)(void)>factorymap;
 int main(void){
 	{
 		std::string path="./lib";
@@ -68,7 +68,7 @@ int main(void){
 				//}
 			}
 			closedir(dp);
-			getchar();
+			/*
 			while(!vhdl.empty()){
 #ifdef _WIN32
 				FreeLibrary((HMODULE)vhdl.back());
@@ -77,10 +77,10 @@ int main(void){
 #endif
 				vhdl.pop_back();
 			}
+			*/
 		}
 	}
 	{
-		getchar();
 		void*hdl;
 #ifdef _WIN32
 		const char*libnam="./lib/liba.dll";
@@ -112,7 +112,6 @@ int main(void){
 #endif
 				if(fn!=NULL){
 					fn();
-					getchar();
 				}else{
 					fprintf(stderr,"Failed to get function\n");
 				}
@@ -130,7 +129,6 @@ int main(void){
 #endif
 				if(fn!=NULL){
 					fn();
-					getchar();
 				}else{
 					fprintf(stderr,"Failed to get function\n");
 				}
@@ -152,7 +150,6 @@ int main(void){
 					f->test();
 					f=fn("Bar");
 					f->test();
-					getchar();
 				}else{
 					fprintf(stderr,"Failed to get function\n");
 				}
@@ -160,6 +157,26 @@ int main(void){
 		}else{
 			fprintf(stderr,"Error\n");
 		}
+	}
+	{//global hashmap factory - test
+		//factorymap["Foo"]();
+		/*
+		factorymap["asdf"]=[]()->F*{
+			return nullptr;
+		};
+		*/
+		std::cout<<"----------------------------------------"<<std::endl;
+		for(auto itr=factorymap.begin();itr!=factorymap.end();++itr){
+			auto k=itr->first;
+			std::cout<<k<<std::endl;
+			F*f=itr->second();
+			if(f!=nullptr){
+				f->test();
+			}else{
+				std::cerr<<"Failed to get object"<<std::endl;
+			}
+		}
+		std::cout<<"----------------------------------------"<<std::endl;
 	}
 	return 0;
 }

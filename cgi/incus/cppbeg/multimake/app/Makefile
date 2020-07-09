@@ -161,10 +161,10 @@ endif
 
 #-------------------------------------------------------------------------------
 ifeq ($(THEOS),Windows)
-	_SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
+        _SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
 else
-	_SRC:=$(shell find $(SRCDIR) -name '*.c*')
-endif
+        _SRC:=$(shell find $(SRCDIR) -type f \( -iname \*.c -o -iname \*.cpp \))
+endif                                                                            
 OBJS=$(addprefix $(_BINDIR),$(patsubst %.c,%.o ,$(patsubst %.cpp,%.o,$(_SRC))))
 ifeq ($(THEOS),Windows)
 	_OBJS=$(subst /,$(PATHSEPSTRIPPED),$(OBJS))
