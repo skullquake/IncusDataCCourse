@@ -26,36 +26,39 @@
 #else
 	#include"dlfcn.h"
 #endif
-//#include"a/myclib.h"
-//#include"a/mycpplib.h"
 #include"a/mycpplibpublic.h"
+extern "C"{
+std::string publicstring="asdf";
+}
 int main(void){
 	{
 		getchar();
 		void*hdl;
 #ifdef _WIN32
-		hdl=LoadLibrary("./lib/liba.dll");
+		const char*libnam="./lib/liba.dll";
 #else
-		hdl=dlopen("./lib/liba.so",RTLD_LAZY);//RTLD_NOW
+		const char*libnam="./lib/liba.so";
+#endif
+#ifdef _WIN32
+		hdl=LoadLibrary(libnam);
+#else
+		//hdl=dlopen(libnam,RTLD_NOW);
+		hdl=dlopen(libnam,RTLD_LAZY);
 		char*err=NULL;
-		if((err=dlerror())!=NULL){//dont exit here,
-			//there might be some unrelated errors, e.g.
-			//libvendorconn under termux
+		if((err=dlerror())!=NULL){//dont exit here!
 			fprintf(stderr,"%s\n",err);
 		}
 #endif
-
 		if(hdl!=NULL){
 			printf("loaded\n");
 			{//c
 				void(*fn)(void);
+				const char*fnnam="myclibf0";
 #ifdef _WIN32
-				fn=(void(*)(void))GetProcAddress((HMODULE)hdl,"myclibf0"); 
+				fn=(void(*)(void))GetProcAddress((HMODULE)hdl,fnnam); 
 #else
-				fn=(void(*)(void))dlsym(hdl,"myclibf0");
-				if((err=dlerror())!=NULL){//dont exit here,
-					//there might be some unrelated errors, e.g.
-					//libvendorconn under termux
+				fn=(void(*)(void))dlsym(hdl,fnnam);
+				if((err=dlerror())!=NULL){
 					fprintf(stderr,"%s\n",err);
 				}
 #endif
@@ -66,13 +69,19 @@ int main(void){
 					fprintf(stderr,"Failed to get function\n");
 				}
 			}
-		/*
 			{//cpp - function
 				void(*fn)(void);
-				fn=(void(*)(void))dlsym(hdl,"mycpplibf0");
-				if((err=dlerror())!=NULL){//dont exit here,
-					//there might be some unrelated errors, e.g.
-					//libvendorconn under termux
+				const char*fnnam="mycpplibf0";
+#ifdef _WIN32
+				fn=(void(*)(void))GetProcAddress((HMODULE)hdl,fnnam); 
+#else
+				fn=(void(*)(void))dlsym(hdl,fnnam);
+				if((err=dlerror())!=NULL){
+					fprintf(stderr,"%s\n",err);
+				}
+#endif
+
+				if((err=dlerror())!=NULL){
 					fprintf(stderr,"%s\n",err);
 				}
 				if(fn!=NULL){
@@ -84,8 +93,16 @@ int main(void){
 			}
 			{//cpp - factory
 				F*(*fn)(std::string);
-				fn=(F*(*)(std::string))dlsym(hdl,"mkF");
-				if((err=dlerror())!=NULL){//dont exit here,
+				const char*fnnam="mkF";
+#ifdef _WIN32
+				fn=(void(*)(void))GetProcAddress((HMODULE)hdl,fnnam); 
+#else
+				fn=(F*(*)(std::string))dlsym(hdl,fnnam);
+				if((err=dlerror())!=NULL){
+					fprintf(stderr,"%s\n",err);
+				}
+#endif
+				if((err=dlerror())!=NULL){
 					fprintf(stderr,"%s\n",err);
 				}
 				if(fn!=NULL){
@@ -99,8 +116,6 @@ int main(void){
 					fprintf(stderr,"Failed to get function\n");
 				}
 			}
-
-		*/
 		}else{
 			fprintf(stderr,"Error\n");
 		}
