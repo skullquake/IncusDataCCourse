@@ -191,10 +191,9 @@ endif
 _BIN=$(_BINDIR)lib$(BINNAM)$(EXT)
 #-------------------------------------------------------------------------------
 ifeq ($(THEOS),Windows)
-        _SRC:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *.c* /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
+        _SRC:=$(shell for %%G in (.c, .cpp) do for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *%%G /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
 else
         _SRC:=$(shell find $(SRCDIR) -type f \( -iname \*.c -o -iname \*.cpp \))
-#       _SRC:=$(shell find $(SRCDIR) -name '*.c*')
 endif                                                                            
 
 
@@ -291,11 +290,7 @@ install:
 	@-$(CP) $(_BIN) $(_INSTALLDIR_LIB) $(SILENT)
 	@-$(CP) $(_INCLUDEDIR)* $(_INSTALLDIR_INC) $(SILENT)
 test:
-	@echo _BIN:
-	@echo $(_BIN)
-	@echo CWDNAM:
-	@echo $(CWDNAM)
-	@echo _INCLUDEDIR:
-	@echo $(_INCLUDEDIR)
-	@echo $(call FNPWD)
+	@echo _SRC:
+	@echo $(_SRC)
+
 #-------------------------------------------------------------------------------
