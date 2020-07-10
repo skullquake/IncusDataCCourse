@@ -1,28 +1,3 @@
-//https://www.ibm.com/developerworks/aix/library/au-aix-symbol-visibility-part2/index.html
-//http://blog.fesnel.com/blog/2009/08/19/hiding-whats-exposed-in-a-shared-library/
-//https://blogs.kde.org/2018/01/19/fun-symbol-visibility
-//https://labjack.com/news/simple-cpp-symbol-visibility-demo
-//https://stackoverflow.com/questions/15560892/symbol-visibility-and-namespace
-//http://mingw.5.n7.nabble.com/ignoring-unresolved-symbols-in-shared-libraries-td14076.html
-//https://stackoverflow.com/questions/39477163/can-you-compile-a-shared-object-to-prefer-local-symbols-even-if-its-being-loaded
-//https://stackoverflow.com/questions/36692315/what-exactly-does-rdynamic-do-and-when-exactly-is-it-needed
-//https://www.tldp.org/HOWTO/html_single/C++-dlopen/
-//https://github.com/alainfrisch/flexdll
-//https://tldp.org/HOWTO/Program-Library-HOWTO/dl-libraries.html
-//https://cygwin.com/cygwin-ug-net/dll.html
-//mingw issue loading symbols from client
-//https://stackoverflow.com/questions/39759060/compile-to-dll-with-some-undefined-references-with-mingw
-//https://atomheartother.github.io/c++/2018/07/12/CPPDynLib.html
-//https://developer.ibm.com/technologies/systems/articles/au-aix-symbol-visibility/
-//get module path from this module:
-// windows
-//  GetModuleFilename
-//  https://www.codeproject.com/Articles/16598/Get-Your-DLL-s-Path-Name
-//  https://stackoverflow.com/questions/6924195/get-dll-path-at-runtime
-// linux
-//  https://stackoverflow.com/questions/1681060/library-path-when-dynamically-loaded
-// sharing globals (used here for registration)
-//  https://stackoverflow.com/questions/3004318/dynamic-loaded-libraries-and-shared-global-symbols 
 #include"proxy.h"
 #include"mycpplib.h"
 #include<iostream>
@@ -99,5 +74,4 @@ __attribute__((visibility("hidden"))) Proxy::~Proxy(){
 	std::cout<<"Proxy::~Proxy()"<<std::endl;
 	//todo: unload and clean from global hashmap
 }
-static Proxy p;
-
+__attribute__((visibility("hidden"))) static Proxy p;

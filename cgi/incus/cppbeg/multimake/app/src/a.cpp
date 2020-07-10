@@ -1,22 +1,3 @@
-/*
- * prelimnirary dlopen work
- * this can later be modified to be
- * included in duktape
- * or as a request handler
- * pointing to dll/so files, with a fixed
- * function called from that dll/so, though
- * the dll/so is dynamically loaded in
- * the dll/so can then act much as a cgi
- * endpoint, but running inside the 
- * main server process
- *
- *  https://www.linuxjournal.com/article/3687
- *  take a look at this for overcoming some of the limitations
- *  around the mangling in c++, some of it implemented here
- *  
- *  dealing with windows:
- *  https://www.codeproject.com/Articles/13501/Platform-Independent-Coding-DLLs-and-SOs
- */
 #include<iostream>
 #include<vector>
 #include<cstdlib>
@@ -31,8 +12,6 @@
 	#include"dlfcn.h"
 #endif
 #include"a/mycpplibpublic.h"
-//requires -rdynamic
-//allows shared libraries to access this
 std::string publicstring="Lorem ipsum sit consecutar";
 extern std::map<std::string,F*(*)(void)>factorymap;
 void clienttest(void){
@@ -47,8 +26,10 @@ int main(void){
 		std::vector<void*> vhdl;
 		if(dp!=nullptr){
 			while((entry=readdir(dp))){
-				//std::cout<<entry->d_name<<std::endl;
-				//if(entry->d_type==DT_REG){
+#ifdef _WIN32
+#else
+				if(entry->d_type==DT_REG){
+#endif
 #ifdef _WIN32
 					if(strstr(entry->d_name,".dll")){
 #else
@@ -67,10 +48,13 @@ int main(void){
 #endif
 						if(hdl!=NULL)vhdl.push_back(hdl);
 					}
-				//}
+#ifdef _WIN32
+#else
+				}
+#endif
+
 			}
 			closedir(dp);
-			/*
 			while(!vhdl.empty()){
 #ifdef _WIN32
 				FreeLibrary((HMODULE)vhdl.back());
@@ -79,7 +63,6 @@ int main(void){
 #endif
 				vhdl.pop_back();
 			}
-			*/
 		}
 	}
 	{
@@ -92,10 +75,9 @@ int main(void){
 #ifdef _WIN32
 		hdl=LoadLibrary(libnam);
 #else
-		//hdl=dlopen(libnam,RTLD_NOW);
-		hdl=dlopen(libnam,RTLD_LAZY);
+		hdl=dlopen(libnam,RTLD_LAZY);//RTLD_NOW
 		char*err=NULL;
-		if((err=dlerror())!=NULL){//dont exit here!
+		if((err=dlerror())!=NULL){
 			fprintf(stderr,"%s\n",err);
 		}
 #endif
@@ -161,12 +143,6 @@ int main(void){
 		}
 	}
 	{//global hashmap factory - test
-		//factorymap["Foo"]();
-		/*
-		factorymap["asdf"]=[]()->F*{
-			return nullptr;
-		};
-		*/
 		std::cout<<"----------------------------------------"<<std::endl;
 		for(auto itr=factorymap.begin();itr!=factorymap.end();++itr){
 			auto k=itr->first;

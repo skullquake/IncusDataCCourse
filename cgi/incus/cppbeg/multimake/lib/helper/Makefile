@@ -61,7 +61,11 @@ STRIP=strip
 BINDIR=./bin/
 BINNAM=$(CWDNAM)
 INSTALLDIR=../../app
-INSTALLDIR_LIB=$(INSTALLDIR)/lib/support
+ifeq ($(THEOS),Windows)
+	INSTALLDIR_LIB=$(INSTALLDIR)/bin/windows
+else
+	INSTALLDIR_LIB=$(INSTALLDIR)/lib/support
+endif
 INSTALLDIR_INC=$(INSTALLDIR)/include/support/$(BINNAM)
 INCLUDEDIR=./include/
 SRCDIR=src

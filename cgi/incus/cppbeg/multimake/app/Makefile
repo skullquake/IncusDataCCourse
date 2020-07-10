@@ -77,6 +77,7 @@ LDFLAGS=
 ifeq ($(THEOS),Windows)
 	SILENT=> NUL 2>&1
 	BINDIR=./bin/windows/
+	LDFLAGS+=-L./bin/windows
 else
 	CFLAGS+=-DDUK_USE_CURL
 	BINDIR=./bin/linux/
@@ -246,11 +247,10 @@ doc:\
 	@$(DOXYGEN) $(DOXYFILE)
 #-------------------------------------------------------------------------------
 clean:
-	@-$(RMDIR) $(_BINDIR)
-	@-$(RMDIR) doc
-	@-$(RMDIR) lib
-	@-$(RMDIR) include
-#$(SILENT)
+	@-$(RMDIR) $(_BINDIR) $(SILENT)
+	@-$(RMDIR) doc $(SILENT)
+	@-$(RMDIR) lib $(SILENT)
+	@-$(RMDIR) include $(SILENT)
 #-------------------------------------------------------------------------------
 ifeq (test,$(firstword $(MAKECMDGOALS)))
   TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
