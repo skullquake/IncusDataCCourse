@@ -1,3 +1,7 @@
+#so many notes, consolidate....
+#note the rpath, under termux it cant find support
+#which is relative to where this is deployed in the client
+#so we specify it here
 #-------------------------------------------------------------------------------
 #DETECT OS
 #-------------------------------------------------------------------------------
@@ -103,6 +107,7 @@ else
 #	LDFLAGS+=-Wl,--unresolved-symbols=ignore-in-shared-libs
 	LDFLAGS+=-Wl,--allow-shlib-undefined
 	BINDIR=./bin/linux/
+	LDFLAGS+=-Wl,-rpath=./lib,-rpath=./lib/support
 endif
 # helper shared object will provide bridge between client and plugins
 # for communication registration etc
