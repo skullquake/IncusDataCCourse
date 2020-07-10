@@ -70,14 +70,12 @@ CFLAGS=\
 	-Wextra\
 	-Wpedantic\
 	-std=c99\
-	-fPIC\
 	-I./src\
 	-I./include
 CXXFLAGS=\
 	-Wall\
 	-Wextra\
 	-Wpedantic\
-	-fPIC\
 	-I./src\
 	-I./include
 LDFLAGS=
@@ -85,10 +83,32 @@ ifeq ($(THEOS),Windows)
 	BINDIR=./bin/windows/
 #	LDFLAGS+=-Wl,--out-implib,$(BINNAM)_dll.a
 #	LDFLAGS+=--no-undefined
-	LDFLAGS+=--enable-runtime-pseudo-reloc
+#	LDFLAGS+=--enable-runtime-pseudo-reloc
+#	LDFLAGS+=-Wl,--unresolved-symbols=ignore-in-object-files
+#	CXXFLAGS+=-r
+#	LDFLAGS+=-Wl,--out-implib,$(BINNAM)_dll.a
+#	LDFLAGS+=-Wl,--export-all-symbols
+#	LDFLAGS+=-Wl,--enable-auto-image-base 
+#	LDFLAGS+=-Wl,--unresolved-symbols=ignore-all
+#	LDFLAGS+=-Wl,--unresolved-symbols=ignore-in-shared-libs
+#	LDFLAGS+=-Wl,--allow-shlib-undefined
+#	CFLAGS+=-Wl,--export-dynamic
+#	CXXFLAGS+=-Wl,--export-dynamic
+#	LDFLAGS+=-Wl,--allow-shlib-undefined
 else
+	LDFLAGS+=-fvisibility=hidden
+	CFLAGS+=-fPIC
+	CXXFLAGS+=-fPIC
+#	LDFLAGS+=-Wl,--unresolved-symbols=ignore-all
+#	LDFLAGS+=-Wl,--unresolved-symbols=ignore-in-shared-libs
+	LDFLAGS+=-Wl,--allow-shlib-undefined
 	BINDIR=./bin/linux/
 endif
+# helper shared object will provide bridge between client and plugins
+# for communication registration etc
+LDFLAGS+=-L../helper/bin/linux
+LDFLAGS+=-L../helper/bin/windows
+LDFLAGS+=-lhelper
 #-------------------------------------------------------------------------------
 #DOCUMENTATION TOOLS
 #-------------------------------------------------------------------------------
@@ -213,25 +233,25 @@ all:$(_BIN)
 #-------------------------------------------------------------------------------
 $(_BIN):$(_OBJS)
 	@echo "generating $@..."
-	@$(CXX) \
+	$(CXX) \
 		-shared\
 		$(_OBJS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
-	@$(STRIP) \
+	$(STRIP) \
 		$(_BIN)
 #-------------------------------------------------------------------------------
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CC)\
+	$(CC)\
 		$(CFLAGS)\
 		-c $<\
 		-o $@
 $(_BINDIR)\%.o: %.cpp
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CXX)\
+	$(CXX)\
 		$(CXXFLAGS)\
 		-c $<\
 		-o $@
@@ -239,7 +259,7 @@ $(_BINDIR)\%.o: %.cpp
 $(_BINDIR)%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CC)\
+	$(CC)\
 		$(CFLAGS)\
 		-c $<\
 		-o $@
@@ -247,7 +267,7 @@ $(_BINDIR)%.o: %.c
 $(_BINDIR)%.o: %.cpp
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CXX)\
+	$(CXX)\
 		$(CXXFLAGS)\
 		-c $<\
 		-o $@

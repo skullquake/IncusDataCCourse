@@ -13,7 +13,7 @@ ifeq ($(OS),Windows_NT)
         THEOS := $(patsubst MINGW64%,MINGW,$(THEOS))
         THEOS := $(patsubst MINGW%,MINGW64,$(THEOS))
     endif
-    EXT := .cgi
+    EXT := .dll
 else
     UNAME_S := $(shell uname -s)
     THEOS := $(UNAME_S)
@@ -24,7 +24,7 @@ else
     ifneq ($(filter arm%,$(UNAME_P)),)
         THEOS=ARM
     endif
-    EXT := .cgi
+    EXT := .so
 endif
 #-------------------------------------------------------------------------------
 #PROCESSOR DETECTION
@@ -50,42 +50,48 @@ else ifeq ($(THEOS),$(filter $(THEOS),Linux Darwin ARM))
     endif
 endif
 #-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+	CWDNAM=$(shell for %%I in (.) do echo %%~nxI)
+else
+	CWDNAM=$(shell basename `pwd`)
+endif
+#-------------------------------------------------------------------------------
 CC=gcc
 STRIP=strip
 BINDIR=./bin/
+BINNAM=$(CWDNAM)
+INSTALLDIR=../../app
+INSTALLDIR_LIB=$(INSTALLDIR)/lib/support
+INSTALLDIR_INC=$(INSTALLDIR)/include/support/$(BINNAM)
+INCLUDEDIR=./include/
 SRCDIR=src
-LIBDIR=lib
 CFLAGS=\
 	-Wall\
 	-Wextra\
 	-Wpedantic\
 	-std=c99\
 	-I./src\
-	-I./include\
-	-L./lib\
-	-L./lib/support
+	-I./include
 CXXFLAGS=\
 	-Wall\
 	-Wextra\
 	-Wpedantic\
-	-std=c++17\
-	-I./include\
 	-I./src\
-	-L./lib\
-	-L./lib/support
+	-I./include
 LDFLAGS=
 ifeq ($(THEOS),Windows)
-	SILENT=> NUL 2>&1
 	BINDIR=./bin/windows/
+	LDFLAGS+=-Wl,--allow-shlib-undefined
+#LDFLAGS+=-Wl,--export-all-symbols
+#LDFLAGS+=-fvisibility=hidden
 else
-	CFLAGS+=-DDUK_USE_CURL
+	CFLAGS+=-fPIC
+#	CFLAGS+-fvisibility=hidden
+	CXXFLAGS+=-fPIC
+#	CXXFLAGS+-fvisibility=hidden
 	BINDIR=./bin/linux/
-	LDFLAGS+=-ldl
-	LDFLAGS+=-rdynamic
 endif
-LDFLAGS+=-Wl,-rpath=./lib,-rpath=./lib/support
-LDFLAGS+=-lhelper
-#LDFLAGS+=-la
+LDFLAGS+=-Wl,--allow-shlib-undefined
 #-------------------------------------------------------------------------------
 #DOCUMENTATION TOOLS
 #-------------------------------------------------------------------------------
@@ -114,6 +120,8 @@ ifeq ($(THEOS),Windows)
 	RM=erase
 	RMDIR=rmdir /s/q
 	CP=copy /Y
+#	CP=xcopy /e/i/c/y
+#	CP=xcopy /e/i/y 
 else
 	MKDIR=mkdir -p
 	RM=rm -r
@@ -132,6 +140,19 @@ define FNTOUCH
 touch $(1)
 endef
 endif
+#-------------------------------------------------------------------------------
+#PWD
+#-------------------------------------------------------------------------------
+ifeq ($(THEOS),Windows)
+define FNPWD
+$(shell echo %cd%)
+endef
+else
+define FNPWD
+pwd
+endef
+endif
+
 #-------------------------------------------------------------------------------
 #PATH SEPERATORS
 #-------------------------------------------------------------------------------
@@ -161,53 +182,59 @@ ifeq ($(THEOS),Windows)
 else
 	_SRCDIR=$(SRCDIR)
 endif
-
+ifeq ($(THEOS),Windows)
+	_INSTALLDIR_LIB=$(subst /,$(PATHSEPSTRIPPED),$(INSTALLDIR_LIB))
+	_INSTALLDIR_INC=$(subst /,$(PATHSEPSTRIPPED),$(INSTALLDIR_INC))
+	_INCLUDEDIR=$(subst /,$(PATHSEPSTRIPPED),$(INCLUDEDIR))
+else
+	_INSTALLDIR_LIB=$(INSTALLDIR_LIB)
+	_INSTALLDIR_INC=$(INSTALLDIR_INC)
+	_INCLUDEDIR=$(INCLUDEDIR)
+endif
+_BIN=$(_BINDIR)lib$(BINNAM)$(EXT)
 #-------------------------------------------------------------------------------
 ifeq ($(THEOS),Windows)
-	_SRC:=$(shell for %%G in (.c, .cpp) do for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *%%G /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
+        _SRC:=$(shell for %%G in (.c, .cpp) do for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *%%G /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
 else
         _SRC:=$(shell find $(SRCDIR) -type f \( -iname \*.c -o -iname \*.cpp \))
 endif                                                                            
+
+
 OBJS=$(addprefix $(_BINDIR),$(patsubst %.c,%.o ,$(patsubst %.cpp,%.o,$(_SRC))))
 ifeq ($(THEOS),Windows)
 	_OBJS=$(subst /,$(PATHSEPSTRIPPED),$(OBJS))
 else
 	_OBJS=$(OBJS)
 endif
-_BIN=$(_BINDIR)a$(EXT)
 #-------------------------------------------------------------------------------
 ifeq (run,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
 endif
 #-------------------------------------------------------------------------------
-all:\
-	$(_BIN)
+all:$(_BIN)
 #-------------------------------------------------------------------------------
-run:$(_BIN)
-	@$(_BIN) $(RUN_ARGS) 
-#-------------------------------------------------------------------------------
-$(_BIN):\
-	$(_OBJS)
+$(_BIN):$(_OBJS)
 	@echo "generating $@..."
 	$(CXX) \
+		-shared\
 		$(_OBJS) \
-		$(CXXFLAGS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
+	$(STRIP) \
+		$(_BIN)
 #-------------------------------------------------------------------------------
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-#		-x c
-	@$(CC)\
+	$(CC)\
 		$(CFLAGS)\
 		-c $<\
 		-o $@
 $(_BINDIR)\%.o: %.cpp
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CXX)\
+	$(CXX)\
 		$(CXXFLAGS)\
 		-c $<\
 		-o $@
@@ -215,8 +242,7 @@ $(_BINDIR)\%.o: %.cpp
 $(_BINDIR)%.o: %.c
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-#		-x c
-	@$(CC)\
+	$(CC)\
 		$(CFLAGS)\
 		-c $<\
 		-o $@
@@ -224,11 +250,10 @@ $(_BINDIR)%.o: %.c
 $(_BINDIR)%.o: %.cpp
 	@echo "generating $@..."
 	@-$(MKDIR) $(@D) $(SILENT)
-	@$(CXX)\
+	$(CXX)\
 		$(CXXFLAGS)\
 		-c $<\
 		-o $@
-
 #-------------------------------------------------------------------------------
 define dump
 objdump $(1) -t
@@ -236,6 +261,10 @@ endef
 dumpall:\
 	$(_OBJS)
 	$(foreach obj,$(_OBJS),$(call dump,$(obj)))
+#-------------------------------------------------------------------------------
+pretty:$(_SRC)
+	$(INDENT) $(_SRC)
+	make -t
 #-------------------------------------------------------------------------------
 doc:\
 	$(SRC) \
@@ -245,42 +274,26 @@ doc:\
 	@echo building documentation...
 	@$(DOXYGEN) $(DOXYFILE)
 #-------------------------------------------------------------------------------
+.phony:test
+#-------------------------------------------------------------------------------
 clean:
 	@-$(RMDIR) $(_BINDIR)
 	@-$(RMDIR) doc
-	@-$(RMDIR) lib
-	@-$(RMDIR) include
-#$(SILENT)
 #-------------------------------------------------------------------------------
 ifeq (test,$(firstword $(MAKECMDGOALS)))
   TEST_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(TEST_ARGS):;@:)
 endif
-#-------------------------------------------------------------------------------
-_LIBDIR=
-ifeq ($(THEOS),Windows)
-	_LIBDIR=$(subst /,$(PATHSEPSTRIPPED),$(LIBDIR))
-else
-	_LIBDIR=$(LIBDIR)
-endif
-ifeq ($(THEOS),Windows)
-	_MAKEFILES:=$(shell for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_LIBDIR) /s /m Makefile /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_LIBDIR)$(PATHSEPSTRIPPED)%%~F)
-else
-	_MAKEFILES:=$(shell find $(_LIBDIR) -name 'Makefile')
-endif
-
 .phony:\
-	libraries\
-	test
-libraries:
-	-$(shell find ./libsrc|grep Makefile|while read MAKEFILE; do make -C `dirname $MAKEFILE`;done)
+	install
+install:
+	@echo "installing..."
+	@-$(MKDIR) $(_INSTALLDIR_LIB) $(SILENT)
+	@-$(MKDIR) $(_INSTALLDIR_INC) $(SILENT)
+	@-$(CP) $(_BIN) $(_INSTALLDIR_LIB) $(SILENT)
+	@-$(CP) $(_INCLUDEDIR)* $(_INSTALLDIR_INC) $(SILENT)
 test:
-	-@$(CC)\
-		-DDEBUG\
-		$(CFLAGS)\
-		$(TEST_ARGS)\
-		$(LDFLAGS)\
-		-o tmp.exe
-	-@tmp.exe
-	-@$(RM) tmp.exe
+	@echo _SRC:
+	@echo $(_SRC)
+
 #-------------------------------------------------------------------------------

@@ -31,12 +31,13 @@
 	#include"dlfcn.h"
 #endif
 #include"a/mycpplibpublic.h"
-
-
 //requires -rdynamic
 //allows shared libraries to access this
 std::string publicstring="Lorem ipsum sit consecutar";
-std::map<std::string,F*(*)(void)>factorymap;
+extern std::map<std::string,F*(*)(void)>factorymap;
+void clienttest(void){
+	std::cout<<"clienttest()"<<std::endl;
+}
 int main(void){
 	{
 		std::string path="./lib";
@@ -46,6 +47,7 @@ int main(void){
 		std::vector<void*> vhdl;
 		if(dp!=nullptr){
 			while((entry=readdir(dp))){
+				//std::cout<<entry->d_name<<std::endl;
 				//if(entry->d_type==DT_REG){
 #ifdef _WIN32
 					if(strstr(entry->d_name,".dll")){

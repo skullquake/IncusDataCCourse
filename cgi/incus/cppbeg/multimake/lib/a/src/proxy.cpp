@@ -1,3 +1,11 @@
+//https://www.ibm.com/developerworks/aix/library/au-aix-symbol-visibility-part2/index.html
+//http://blog.fesnel.com/blog/2009/08/19/hiding-whats-exposed-in-a-shared-library/
+//https://blogs.kde.org/2018/01/19/fun-symbol-visibility
+//https://labjack.com/news/simple-cpp-symbol-visibility-demo
+//https://stackoverflow.com/questions/15560892/symbol-visibility-and-namespace
+//http://mingw.5.n7.nabble.com/ignoring-unresolved-symbols-in-shared-libraries-td14076.html
+//https://stackoverflow.com/questions/39477163/can-you-compile-a-shared-object-to-prefer-local-symbols-even-if-its-being-loaded
+//https://stackoverflow.com/questions/36692315/what-exactly-does-rdynamic-do-and-when-exactly-is-it-needed
 //https://www.tldp.org/HOWTO/html_single/C++-dlopen/
 //https://github.com/alainfrisch/flexdll
 //https://tldp.org/HOWTO/Program-Library-HOWTO/dl-libraries.html
@@ -13,6 +21,8 @@
 //  https://stackoverflow.com/questions/6924195/get-dll-path-at-runtime
 // linux
 //  https://stackoverflow.com/questions/1681060/library-path-when-dynamically-loaded
+// sharing globals (used here for registration)
+//  https://stackoverflow.com/questions/3004318/dynamic-loaded-libraries-and-shared-global-symbols 
 #include"proxy.h"
 #include"mycpplib.h"
 #include<iostream>
@@ -22,15 +32,10 @@
 #else
 #include<dlfcn.h>
 #endif
-#ifdef _WIN32
-__declspec(dllimport) std::string publicstring;
-//extern std::string publicstring;
-#else
-extern std::string publicstring;
+extern std::string helper_version;
+void clienttest(void);
 extern std::map<std::string,F*(*)(void)>factorymap;
-#endif
-
-void dummy(){}
+static void dummy(){}
 static std::string getFileName(const std::string& s){
 	char sep = '/';
 #ifdef _WIN32
@@ -48,7 +53,7 @@ static std::string getmpath(void){
 #ifdef _WIN32
 	char path[MAX_PATH];
 	HMODULE hm=NULL;
-	if(GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,(LPCSTR) &dummy, &hm)!=0){
+	if(GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,(LPCSTR)&dummy,&hm)!=0){
 		if(GetModuleFileName(hm,path,sizeof(path))==0){
 			//handle error
 			err=GetLastError();
@@ -71,42 +76,26 @@ static std::string getmpath(void){
 #endif
 	return ret;
 }
-Proxy::Proxy(){
-	std::cout<<"Proxy::Proxy()"<<std::endl;
-#ifdef _WIN32
-#else
-	std::cout<<publicstring<<std::endl;
-#endif
+__attribute__((visibility("hidden"))) Proxy::Proxy(){
+	std::cout<<"liba:Proxy::Proxy()"<<std::endl;
+	std::cout<<"helper_version: "<<helper_version<<std::endl;
 //test get path of this shared object
-#ifdef _WIN32
-	std::string mpath=getmpath();
-	std::cout<<mpath<<std::endl;
-	std::cout<<getFileName(mpath)<<std::endl;
-#else
 	std::string mpath=getmpath();
 	std::cout<<"mpath:"<<mpath<<std::endl;
 	std::cout<<"mname:"<<getFileName(mpath)<<std::endl;
-	Dl_info info;
-	if(dladdr((const void*)dummy,&info)){//find better way
-		//std::cout<<"Path:   "<<info.dli_fname<<std::endl;
-		//std::cout<<"Symbol: "<<info.dli_sname<<std::endl;
-		factorymap[(
-			//std::string(info.dli_sname)+
-			getFileName(std::string(info.dli_fname))+
-			std::string(":")+
-			std::string("Foo")
-		)]=[]()->F*{return new Foo();};
-		factorymap[(
-			//std::string(info.dli_sname)+
-			getFileName(std::string(info.dli_fname))+
-			std::string(":")+
-			std::string("Bar")
-		)]=[]()->F*{return new Bar();};
-	}else{
-	}
-#endif
+	//add functions
+	factorymap[(
+		getFileName(mpath)+
+		std::string(":")+
+		std::string("Foo")
+	)]=[]()->F*{return new Foo();};
+	factorymap[(
+		getFileName(mpath)+
+		std::string(":")+
+		std::string("Bar")
+	)]=[]()->F*{return new Bar();};
 }
-Proxy::~Proxy(){
+__attribute__((visibility("hidden"))) Proxy::~Proxy(){
 	std::cout<<"Proxy::~Proxy()"<<std::endl;
 	//todo: unload and clean from global hashmap
 }
