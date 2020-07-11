@@ -18,12 +18,12 @@ void clienttest(void){
 	std::cout<<"clienttest()"<<std::endl;
 }
 int main(void){
+	std::vector<void*> vhdl;
 	{
 		std::string path="./lib";
 		DIR*dp=nullptr;
 		dp=opendir(path.c_str());
 		struct dirent*entry=nullptr;
-		std::vector<void*> vhdl;
 		if(dp!=nullptr){
 			while((entry=readdir(dp))){
 #ifdef _WIN32
@@ -55,14 +55,7 @@ int main(void){
 
 			}
 			closedir(dp);
-			while(!vhdl.empty()){
-#ifdef _WIN32
-				FreeLibrary((HMODULE)vhdl.back());
-#else
-				dlclose(vhdl.back());
-#endif
-				vhdl.pop_back();
-			}
+
 		}
 	}
 	{
@@ -147,14 +140,26 @@ int main(void){
 		for(auto itr=factorymap.begin();itr!=factorymap.end();++itr){
 			auto k=itr->first;
 			std::cout<<k<<std::endl;
-			F*f=itr->second();
-			if(f!=nullptr){
-				f->test();
-			}else{
-				std::cerr<<"Failed to get object"<<std::endl;
+			if(itr->second!=nullptr){
+				F*f=itr->second();
+				if(f!=nullptr){
+					f->test();
+				}else{
+					std::cerr<<"Failed to get object"<<std::endl;
+				}
 			}
 		}
 		std::cout<<"----------------------------------------"<<std::endl;
+	}
+	{//close shared libraries
+		while(!vhdl.empty()){
+#ifdef _WIN32
+			FreeLibrary((HMODULE)vhdl.back());
+#else
+			dlclose(vhdl.back());
+#endif
+			vhdl.pop_back();
+		}
 	}
 	return 0;
 }

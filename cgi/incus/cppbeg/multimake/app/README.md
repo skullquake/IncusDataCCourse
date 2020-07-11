@@ -75,7 +75,9 @@ https://www.ibm.com/developerworks/aix/library/au-aix-symbol-visibility-part2/in
 http://blog.fesnel.com/blog/2009/08/19/hiding-whats-exposed-in-a-shared-library/
 https://blogs.kde.org/2018/01/19/fun-symbol-visibility
 https://labjack.com/news/simple-cpp-symbol-visibility-demo
+https://stackoverflow.com/questions/3570355/c-fvisibility-hidden-fvisibility-inlines-hidden
 https://stackoverflow.com/questions/15560892/symbol-visibility-and-namespace
+API Design for C++ by Martin Reddy.
 http://mingw.5.n7.nabble.com/ignoring-unresolved-symbols-in-shared-libraries-td14076.html
 https://stackoverflow.com/questions/39477163/can-you-compile-a-shared-object-to-prefer-local-symbols-even-if-its-being-loaded
 https://stackoverflow.com/questions/36692315/what-exactly-does-rdynamic-do-and-when-exactly-is-it-needed
@@ -96,4 +98,8 @@ get module path from this module:
   https://stackoverflow.com/questions/1681060/library-path-when-dynamically-loaded
  sharing globals (used here for registration)
   https://stackoverflow.com/questions/3004318/dynamic-loaded-libraries-and-shared-global-symbols 
+How to Write Shared Libraries. http://people.redhat.com/
+drepper/dsohowto.pd
+Inside ELF Symbol Tables. http://blogs.sun.com/ali/entry/
+inside_elf_symbol_tables
 

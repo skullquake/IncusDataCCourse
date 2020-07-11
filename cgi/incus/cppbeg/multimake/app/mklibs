@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
+make -j8 -C ../lib/helper
 find ../lib|grep Makefile|while read MAKEFILE; do 
-	make -C `dirname $MAKEFILE` 
-	make -C `dirname $MAKEFILE` install
+	make -j8 -C `dirname $MAKEFILE` 
+	make -j8 -C `dirname $MAKEFILE` install
 done

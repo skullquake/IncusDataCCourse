@@ -10,8 +10,8 @@
 extern std::string helper_version;
 void clienttest(void);
 extern std::map<std::string,F*(*)(void)>factorymap;
-static void dummy(){}
-static std::string getFileName(const std::string& s){
+__attribute__((visibility("hidden"))) static void dummy(){}
+__attribute__((visibility("hidden"))) static std::string getFileName(const std::string& s){
 	char sep = '/';
 #ifdef _WIN32
 	sep = '\\';
@@ -22,7 +22,7 @@ static std::string getFileName(const std::string& s){
 	}
 	return("");
 }
-static std::string getmpath(void){
+__attribute__((visibility("hidden"))) static std::string getmpath(void){
 	std::string ret="";
 	int err=0;
 #ifdef _WIN32
@@ -75,3 +75,12 @@ __attribute__((visibility("hidden"))) Proxy::~Proxy(){
 	//todo: unload and clean from global hashmap
 }
 __attribute__((visibility("hidden"))) static Proxy p;
+void asdf0(void){}
+__attribute__((visibility("hidden"))) void asdf1(void){}
+static void asdf2(void){}
+__attribute__((visibility("hidden"))) static void asdf3(void){}
+__attribute__((visibility("default"))) void asdf4(void){}
+namespace MyDSO __attribute__((visibility("default"))) {
+	void qwer0(void){}
+	__attribute__((visibility("hidden"))) void qwer1(void){}
+}

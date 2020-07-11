@@ -100,7 +100,6 @@ ifeq ($(THEOS),Windows)
 #	CXXFLAGS+=-Wl,--export-dynamic
 #	LDFLAGS+=-Wl,--allow-shlib-undefined
 else
-	LDFLAGS+=-fvisibility=hidden
 	CFLAGS+=-fPIC
 	CXXFLAGS+=-fPIC
 #	LDFLAGS+=-Wl,--unresolved-symbols=ignore-all
@@ -114,6 +113,8 @@ endif
 LDFLAGS+=-L../helper/bin/linux
 LDFLAGS+=-L../helper/bin/windows
 LDFLAGS+=-lhelper
+CFLAGS+=-fvisibility=hidden
+CXXFLAGS+=-fvisibility=hidden
 #-------------------------------------------------------------------------------
 #DOCUMENTATION TOOLS
 #-------------------------------------------------------------------------------
@@ -214,6 +215,7 @@ else
 	_INCLUDEDIR=$(INCLUDEDIR)
 endif
 _BIN=$(_BINDIR)lib$(BINNAM)$(EXT)
+_BINSTRIPPED=$(_BINDIR)lib$(BINNAM)_stripped$(EXT)
 #-------------------------------------------------------------------------------
 ifeq ($(THEOS),Windows)
         _SRC:=$(shell for %%G in (.c, .cpp) do for /f "tokens=1* delims=\" %%A in ('forfiles /p $(_SRCDIR) /s /m *%%G /c "cmd /c @echo @relpath"') do @for %%F in (^"%%B) do @echo $(_SRCDIR)$(PATHSEPSTRIPPED)%%~F)
@@ -234,7 +236,14 @@ ifeq (run,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 #-------------------------------------------------------------------------------
-all:$(_BIN)
+all:$(_BINSTRIPPED)
+#-------------------------------------------------------------------------------
+$(_BINSTRIPPED):$(_BIN)
+	@$(CP) \
+		$(_BIN) \
+		$(_BINSTRIPPED)
+	@$(STRIP) \
+		$(_BINSTRIPPED)
 #-------------------------------------------------------------------------------
 $(_BIN):$(_OBJS)
 	@echo "generating $@..."
@@ -243,8 +252,6 @@ $(_BIN):$(_OBJS)
 		$(_OBJS) \
 		$(LDFLAGS) \
 		-o $(_BIN)
-	$(STRIP) \
-		$(_BIN)
 #-------------------------------------------------------------------------------
 $(_BINDIR)\%.o: %.c
 	@echo "generating $@..."
@@ -278,11 +285,34 @@ $(_BINDIR)%.o: %.cpp
 		-o $@
 #-------------------------------------------------------------------------------
 define dump
-objdump $(1) -t
+echo ----------------------------------------
+echo FILE: $(1)
+echo ----------------------------------------
+objdump -TC $(1) 
 endef
+define lssym
+echo ----------------------------------------
+echo FILE: $(1)
+echo ----------------------------------------
+nm -gDC $(1) 
+endef
+define rdelf
+echo ----------------------------------------
+echo FILE: $(1)
+echo ----------------------------------------
+readelf -Ws $(1)
+endef
+
 dumpall:\
 	$(_OBJS)
-	$(foreach obj,$(_OBJS),$(call dump,$(obj)))
+	@-$(foreach obj,$(_OBJS),$(call dump,$(obj)))
+	@-$(call dump,$(_BIN))
+	@-$(call dump,$(_BINSTRIPPED))
+	@-$(foreach obj,$(_OBJS),$(call lssym,$(obj)))
+	@-$(call lssym,$(_BIN))
+	@-$(call lssym,$(_BINSTRIPPED))
+	@-$(call rdelf,$(_BIN))
+	@-$(call rdelf,$(_BINSTRIPPED))
 #-------------------------------------------------------------------------------
 pretty:$(_SRC)
 	$(INDENT) $(_SRC)
@@ -312,7 +342,7 @@ install:
 	@echo "installing..."
 	@-$(MKDIR) $(_INSTALLDIR_LIB) $(SILENT)
 	@-$(MKDIR) $(_INSTALLDIR_INC) $(SILENT)
-	@-$(CP) $(_BIN) $(_INSTALLDIR_LIB) $(SILENT)
+	@-$(CP) $(_BINSTRIPPED) $(_INSTALLDIR_LIB)lib$(BINNAM)$(EXT) $(SILENT)
 	@-$(CP) $(_INCLUDEDIR)* $(_INSTALLDIR_INC) $(SILENT)
 test:
 	@echo _SRC:

@@ -62,7 +62,6 @@ CFLAGS=\
 	-std=c99\
 	-I./src\
 	-I./include\
-	-L./lib\
 	-L./lib/support
 CXXFLAGS=\
 	-Wall\
@@ -71,7 +70,6 @@ CXXFLAGS=\
 	-std=c++17\
 	-I./include\
 	-I./src\
-	-L./lib\
 	-L./lib/support
 LDFLAGS=
 ifeq ($(THEOS),Windows)
@@ -84,7 +82,8 @@ else
 	LDFLAGS+=-ldl
 	LDFLAGS+=-rdynamic
 endif
-LDFLAGS+=-Wl,-rpath=./lib,-rpath=./lib/support
+#LDFLAGS+=-Wl,-rpath=./lib,-rpath=./lib/support
+LDFLAGS+=-Wl,-rpath=./lib/support
 LDFLAGS+=-lhelper
 #LDFLAGS+=-la
 #-------------------------------------------------------------------------------
